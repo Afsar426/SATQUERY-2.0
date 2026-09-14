@@ -1,0 +1,12 @@
+{
+  "name": "satquery-frontend",
+  "version": "1.2.0",
+  "description": "SatQuery AI - Earth Observation Intelligence Platform Frontend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "author": "SatQuery Team",
+  "license": "ISC"
+}

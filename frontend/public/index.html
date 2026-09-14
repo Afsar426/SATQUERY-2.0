@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SatQuery — Earth Observation Intelligence</title>
+  
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400;1,6..72,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- SatQuery Scientific Design System Stylesheet -->
+  <link rel="stylesheet" href="/styles/satquery.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231B365D'><path d='M12 2a1 1 0 0 1 1 1v1.055a8.002 8.002 0 0 1 6.945 6.945H21a1 1 0 1 1 0 2h-1.055A8.002 8.002 0 0 1 13 19.945V21a1 1 0 1 1-2 0v-1.055A8.002 8.002 0 0 1 4.055 13H3a1 1 0 1 1 0-2h1.055A8.002 8.002 0 0 1 11 4.055V3a1 1 0 0 1 1-1zm0 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12z'/></svg>">
+</head>
+<body class="bg-grid-pattern">
+  <div class="app-container">
+    
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+      <div class="navbar-inner">
+        
+        <!-- Brand / Logo -->
+        <a href="/" class="brand-wrapper" data-nav="/">
+          <div class="brand-icon">
+            <!-- Satellite Icon -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 7 9 3 5 7l4 4"></path>
+              <path d="m17 11 4 4-4 4-4-4"></path>
+              <path d="m8 12 4 4 6-6-4-4Z"></path>
+              <path d="m16 8 3-3"></path>
+              <path d="M9 21a6 6 0 0 0-6-6"></path>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">SatQuery</span>
+            <span class="brand-subtitle">Earth Observation Intelligence</span>
+          </div>
+        </a>
+
+        <!-- Page-Based Navigation Links -->
+        <nav>
+          <ul class="nav-links">
+            <li><a href="/" class="nav-link" data-nav="/">Home</a></li>
+            <li><a href="/analysis" class="nav-link" data-nav="/analysis">Analysis</a></li>
+            <li><a href="/documentation" class="nav-link" data-nav="/documentation">Documentation &amp; Use Cases</a></li>
+          </ul>
+        </nav>
+
+        <!-- Status and Actions -->
+        <div class="nav-actions">
+          <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span><strong class="status-text-bold">System Ready</strong> <span style="opacity:0.7">EO-Cluster Operational</span></span>
+          </div>
+          <div id="nav-action-container">
+            <!-- Dynamically populated: 'Launch Analysis →' on Home/Docs, 'Workspace Live' on Analysis -->
+            <a href="/analysis" class="btn-launch-nav" data-nav="/analysis">
+              Launch Analysis →
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Dynamic Route View Container -->
+    <main id="app-root" class="main-content" role="main">
+      <!-- Injected via client-side page router -->
+    </main>
+
+    <!-- Global Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Global Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>
+          <strong>SatQuery AI</strong> — Earth Observation Intelligence Platform &bull; InternVL3-1B / VQA-10K LoRA
+        </div>
+        <div class="footer-links">
+          <a href="/" data-nav="/">Home</a>
+          <a href="/analysis" data-nav="/analysis">Analysis</a>
+          <a href="/documentation" data-nav="/documentation">Documentation &amp; Use Cases</a>
+          <a href="/team" data-nav="/team">Team</a>
+          <a href="/roadmap" data-nav="/roadmap">Roadmap</a>
+          <a href="/evidence" data-nav="/evidence">Evidence</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Page Router and Application Logic -->
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
