@@ -1,0 +1,67 @@
+# SatQuery AI — GPU environment
+# Target: Windows Server 2016 + Python 3.11.x + NVIDIA RTX A6000
+#
+# PyTorch stack is pinned to the CUDA 12.1 wheels.
+# The GPU machine's NVIDIA driver (538.78) supports CUDA 12.1 runtime.
+#
+# Install inside a fresh Python 3.11 virtual environment:
+#   py -3.11 -m venv satquery_env
+#   .\satquery_env\Scripts\activate
+#   python -m pip install --upgrade pip
+#   pip install -r requirements.txt
+#
+# NOTE:
+# - flash-attn is intentionally NOT included: Windows builds are problematic.
+#   Start InternVL3 with use_flash_attn=False.
+# - bitsandbytes is intentionally NOT included initially. Add only if we
+#   explicitly decide to use 8-bit/4-bit QLoRA and verify the Windows build.
+#
+# ---------- PyTorch / CUDA 12.1 ----------
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.5.1
+torchvision==0.20.1
+torchaudio==2.5.1
+
+# ---------- Core numerical/data ----------
+numpy==1.26.4
+pandas==2.2.3
+scipy==1.14.1
+pyarrow==18.1.0
+
+# ---------- Images / remote sensing ----------
+Pillow==11.0.0
+tifffile==2024.12.12
+rasterio==1.4.3
+
+# ---------- ML / scientific ----------
+scikit-learn==1.5.2
+matplotlib==3.9.4
+
+# ---------- Hugging Face / InternVL3 ----------
+# InternVL3-1B config was published with Transformers 4.48.3.
+transformers==4.48.3
+accelerate==1.2.1
+peft==0.14.0
+huggingface-hub==0.27.1
+datasets==3.2.0
+safetensors==0.5.2
+tokenizers==0.21.0
+
+# ---------- Vision/model utilities ----------
+timm==1.0.14
+einops==0.8.0
+sentencepiece==0.2.0
+
+# ---------- Training / experiment utilities ----------
+tqdm==4.67.1
+PyYAML==6.0.2
+tensorboard==2.18.0
+
+# ---------- API / backend (for SatQuery service later) ----------
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+pydantic==2.10.5
+
+# ---------- General utilities ----------
+requests==2.32.3

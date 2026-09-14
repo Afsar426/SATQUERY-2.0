@@ -1,0 +1,16 @@
+SATQUERY AI - VQA 10K CONTINUATION TRAINING
+============================================================
+Previous checkpoint: vqa_5k
+Previous seed: 42
+New seed: 123
+New RSVQA samples: 2500
+New VRSBench samples: 2500
+New total samples: 5000
+Average loss: 0.738394
+LoRA changed tensors: 192
+LoRA unchanged tensors: 0
+Learning rate: 0.0001
+LoRA r: 8
+LoRA alpha: 32
+LoRA dropout: 0.1
+Training type: continuation from vqa_5k

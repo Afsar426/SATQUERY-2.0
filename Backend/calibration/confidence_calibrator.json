@@ -1,0 +1,47 @@
+{
+  "version": "1.0",
+  "method": "logistic_calibration",
+  "base_model": "OpenGVLab/InternVL3-1B",
+  "lora_checkpoint": "vqa_10k",
+  "validation_samples": 1000,
+  "rsvqa_samples": 500,
+  "vrsbench_samples": 500,
+  "num_generation_samples": 5,
+  "seed": 123,
+  "feature": "answer_consistency",
+  "target": "prediction_correctness",
+  "calibrator": {
+    "weight": 1.3648977074640383,
+    "bias": 0.5693459437035263,
+    "x_mean": 0.8105999999999985,
+    "x_std": 0.2701252302173929
+  },
+  "metrics": {
+    "validation_accuracy": 0.629,
+    "brier_score": 0.16061923973802036,
+    "expected_calibration_error": 0.0336483721273152
+  },
+  "consistency_groups": {
+    "1.0": {
+      "total": 596,
+      "correct": 501
+    },
+    "0.2": {
+      "total": 87,
+      "correct": 9
+    },
+    "0.8": {
+      "total": 118,
+      "correct": 59
+    },
+    "0.6": {
+      "total": 116,
+      "correct": 42
+    },
+    "0.4": {
+      "total": 83,
+      "correct": 18
+    }
+  },
+  "warning": "Confidence is a calibrated probability estimate of correctness based on validation data. It is not a guarantee of correctness."
+}
