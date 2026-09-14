@@ -102,7 +102,7 @@ export function renderDocumentation() {
             <div class="step-details">
               <div class="step-title">Upload Satellite Image</div>
               <div class="step-desc">
-                Drag and drop or browse to select your satellite raster tile. Supports GeoTIFF and TIFF images only with payloads up to 50 MB.
+                Drag and drop or browse to select your satellite raster tile. Supports GeoTIFF, TIFF, and PNG images only (Max 50 MB).
               </div>
             </div>
           </div>
@@ -112,7 +112,7 @@ export function renderDocumentation() {
             <div class="step-details">
               <div class="step-title">Write Your Own Question</div>
               <div class="step-desc">
-                Type your specific question in plain language directly into the empty query console. Queries can be written in English or multilingual phrasing.
+                Type your specific question in plain language directly into the empty query console.
               </div>
             </div>
           </div>

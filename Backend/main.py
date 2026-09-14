@@ -156,7 +156,7 @@ async def vqa_endpoint(
 
     filename = (
         image.filename
-        or "image.jpg"
+        or "image.tif"
     )
 
     extension = (
@@ -168,7 +168,7 @@ async def vqa_endpoint(
     allowed_extensions = {
         ".tif",
         ".tiff",
-        ".geotiff",
+        ".png",
     }
 
     if extension not in allowed_extensions:
@@ -176,8 +176,8 @@ async def vqa_endpoint(
         raise HTTPException(
             status_code=400,
             detail=(
-                "Unsupported image format. "
-                "Use GeoTIFF or TIFF."
+                "Unsupported file format. "
+                "Please upload a GeoTIFF, TIFF, or PNG image."
             ),
         )
 
@@ -225,7 +225,18 @@ async def vqa_endpoint(
         try:
             from PIL import Image as PILImage
             with PILImage.open(image_path) as pil_img:
+                img_format = (pil_img.format or "").upper()
+                if img_format not in {"TIFF", "PNG"}:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=(
+                            "Unsupported file format. "
+                            "Please upload a GeoTIFF, TIFF, or PNG image."
+                        ),
+                    )
                 img_width, img_height = pil_img.size
+        except HTTPException:
+            raise
         except Exception:
             pass
 
@@ -425,7 +436,7 @@ def features():
                 "status": "available",
                 "endpoint": "/api/vqa",
                 "input": {
-                    "image": "GeoTIFF / TIFF (Max 50 MB)",
+                    "image": "GeoTIFF, TIFF, or PNG (Max 50 MB)",
                     "question": "text",
                 },
             },

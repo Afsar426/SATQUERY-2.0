@@ -81,9 +81,9 @@ export function renderHome() {
           <div class="capability-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           </div>
-          <h3 class="capability-title">GeoTIFF / TIFF Ingestion (Max 50 MB)</h3>
+          <h3 class="capability-title">GeoTIFF, TIFF &amp; PNG Ingestion (Max 50 MB)</h3>
           <p class="capability-desc">
-            Native support for uncompressed and geospatial TIFF rasters up to 50 MB with streaming validation.
+            Native support for GeoTIFF, TIFF, and PNG rasters up to 50 MB with streaming validation.
           </p>
         </div>
 

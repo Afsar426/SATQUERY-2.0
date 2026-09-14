@@ -149,6 +149,12 @@ def format_answer_for_display(raw_answer: str) -> str:
     if re.fullmatch(r"\d+(?:\.\d+)?", clean):
         return f"The observed count is {clean}."
 
+    if re.fullmatch(r"\d+(?:\.\d+)?%", clean):
+        return f"The observed estimate is {clean}."
+
+    if re.match(r"^\d+\s+\w+", clean):
+        return f"{clean} are visible in the image."
+
     colors = {
         "red", "green", "blue", "yellow",
         "black", "white", "gray", "grey",

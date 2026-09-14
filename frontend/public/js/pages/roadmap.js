@@ -48,7 +48,7 @@ export function renderRoadmap() {
             Single-Image Remote-Sensing VQA
           </div>
           <ul style="list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; margin-top: 10px; font-size: 13px; color: var(--text-secondary);">
-            <li>&bull; GeoTIFF / TIFF Image Upload (Max 50 MB)</li>
+            <li>&bull; GeoTIFF, TIFF &amp; PNG Image Upload (Max 50 MB)</li>
             <li>&bull; High-Resolution Image Preview</li>
             <li>&bull; User-Defined Natural-Language Query</li>
             <li>&bull; InternVL3-1B Vision Backbone</li>

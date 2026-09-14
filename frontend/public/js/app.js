@@ -13,7 +13,7 @@ import { renderEvidence, initEvidenceEvents } from './pages/evidence.js';
 
 const routes = {
   '/': { render: renderHome, title: 'SatQuery — Earth Observation Intelligence' },
-  '/analysis': { render: renderAnalysis, init: initAnalysisEvents, title: 'Analyze Geographical Imagery — SatQuery' },
+  '/analysis': { render: renderAnalysis, init: initAnalysisEvents, title: 'Analyze Satellite Imagery — SatQuery' },
   '/documentation': { render: renderDocumentation, title: 'Documentation & Use Cases — SatQuery' },
   '/team': { render: renderTeam, title: 'SatQuery Team — Core Contributors' },
   '/roadmap': { render: renderRoadmap, title: 'Engineering Roadmap — SatQuery' },

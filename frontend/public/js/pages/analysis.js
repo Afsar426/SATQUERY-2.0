@@ -31,9 +31,9 @@ export function renderAnalysis() {
             <span>&gt;</span>
             <span class="current">Analysis</span>
           </nav>
-          <h1 class="page-title">Analyze Geographical Imagery</h1>
+          <h1 class="page-title">Analyze Satellite Imagery</h1>
           <p class="page-subtitle">
-            Upload geographical imagery and ask your question, SatQuery analyzes and provides evidence-backed insights using specialized models and geospatial tools.
+            Upload satellite imagery and ask your question, SatQuery analyzes and provides evidence-backed insights using specialized models and geospatial tools.
           </p>
         </div>
 
@@ -77,13 +77,13 @@ export function renderAnalysis() {
             <button type="button" class="btn-browse" id="btn-browse-trigger">
               Browse / Upload
             </button>
-            <div class="dropzone-hint">Supports GeoTIFF and TIFF images only.</div>
+            <div class="dropzone-hint">Supports GeoTIFF, TIFF, and PNG images only (Max 50 MB)</div>
           </div>
 
           <input 
             type="file" 
             id="image-file-input" 
-            accept=".tif,.tiff,.geotiff" 
+            accept=".tif,.tiff,.png"
             style="display: none;"
           />
 
@@ -106,11 +106,6 @@ export function renderAnalysis() {
               maxlength="500"
               spellcheck="false"
             ></textarea>
-
-            <div class="question-hint">
-              <span style="color: var(--navy-primary); font-weight: 700;">&bull;</span>
-              <span>You can ask your own question in your preferred language (English, Hindi, Hinglish, etc.).</span>
-            </div>
 
             <button type="button" class="btn-analyze" id="btn-submit-analyze">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -228,11 +223,10 @@ export function initAnalysisEvents() {
     }
 
     const ext = file.name.split('.').pop().toLowerCase();
-    const validExtensions = ['tif', 'tiff', 'geotiff'];
-    const validTypes = ['image/tiff', 'image/x-tiff'];
+    const validExtensions = ['tif', 'tiff', 'png'];
 
-    if (!validExtensions.includes(ext) && (file.type && !validTypes.includes(file.type))) {
-      showToast('Unsupported image format. Use GeoTIFF or TIFF.', 'error');
+    if (!validExtensions.includes(ext)) {
+      showToast('Unsupported file format. Please upload a GeoTIFF, TIFF, or PNG image.', 'error');
       fileInput.value = '';
       return;
     }
@@ -407,7 +401,6 @@ export function initAnalysisEvents() {
             <div class="image-meta-pills">
               <span class="meta-pill">Size: ${result.image_size}</span>
               <span class="meta-pill">Dimensions: ${result.image_dimensions}</span>
-              <span class="meta-pill">Bands: RGB (3-Channel)</span>
               <span class="meta-pill">Interpolation: Bicubic 448px</span>
             </div>
           </div>
