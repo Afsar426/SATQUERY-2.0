@@ -330,10 +330,13 @@ export function initAnalysisEvents() {
       const analysisPayload = {
         question: question,
         answer: data.answer || 'Inconclusive response from vision model.',
+        raw_answer: data.raw_answer || data.answer || '',
         confidence: data.confidence !== undefined ? data.confidence : 0.85,
         confidence_percent: data.confidence_percent !== undefined ? data.confidence_percent : 85.0,
         confidence_label: data.confidence_label || 'High',
         samples_used: data.samples_used || 5,
+        consistency: data.consistency !== undefined ? data.consistency : null,
+        confidence_calibrated: data.confidence_calibrated !== undefined ? data.confidence_calibrated : true,
         processing_time: `${processingTime}s`,
         inference_time: `${(processingTime * 0.85).toFixed(2)}s`,
         timestamp: new Date().toISOString(),
@@ -432,7 +435,14 @@ export function initAnalysisEvents() {
 
             <!-- 2. AI Answer (Primary Result) -->
             <div class="ai-answer-box">
-              <div class="ai-answer-title">AI Answer</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <div class="ai-answer-title" style="margin-bottom: 0;">AI Answer</div>
+                ${result.raw_answer && result.raw_answer !== result.answer ? `
+                  <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); background: #F1F5F9; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border-light);">
+                    Raw output: <em>"${escapeHtml(result.raw_answer)}"</em>
+                  </span>
+                ` : ''}
+              </div>
               <div class="ai-answer-content">${escapeHtml(result.answer)}</div>
             </div>
 
@@ -500,15 +510,15 @@ export function initAnalysisEvents() {
                 </div>
                 <div class="trace-item">
                   <span class="trace-time">[+0.78s]</span>
-                  <span>LoRA Forward Pass: Generated 5 decoding passes (1 greedy + 4 temperature 0.20 / top-p 0.90 samples).</span>
+                  <span>LoRA Forward Pass: Generated ${result.samples_used || 5} decoding passes (1 greedy + 4 sampled). Raw token: "${escapeHtml(result.raw_answer || result.answer)}".</span>
                 </div>
                 <div class="trace-item">
                   <span class="trace-time">[+1.10s]</span>
-                  <span>Consistency Calibration: Evaluated normalized agreement. Mapped via confidence_calibrator.json to ${confPercent}%.</span>
+                  <span>Consistency Calibration: Evaluated normalized agreement${result.consistency !== null ? ` (${Math.round(result.consistency * 100)}% consistency)` : ''}. Mapped via confidence_calibrator.json to ${confPercent}%.</span>
                 </div>
                 <div class="trace-item">
                   <span class="trace-time">[+${result.inference_time}]</span>
-                  <span>Response formatted: Generated primary answer with ${confLevel} confidence tier.</span>
+                  <span>Response Formatted: Display answer "${escapeHtml(result.answer)}" with ${confLevel} confidence tier.</span>
                 </div>
               </div>
             </div>
@@ -653,6 +663,11 @@ export function initAnalysisEvents() {
         <div class="section">
           <div class="section-title">AI Vision-Language Prediction</div>
           <div class="callout">${escapeHtml(result.answer)}</div>
+          ${result.raw_answer && result.raw_answer !== result.answer ? `
+            <div style="margin-top: 8px; font-size: 12px; color: #64748B;">
+              <strong>Raw Model Output:</strong> "${escapeHtml(result.raw_answer)}"
+            </div>
+          ` : ''}
         </div>
 
         <div class="section">
@@ -660,6 +675,7 @@ export function initAnalysisEvents() {
           <table class="meta-table">
             <tr><td class="label">Vision-Language Model</td><td>InternVL3-1B</td></tr>
             <tr><td class="label">Trained Adaptation</td><td>VQA-10K LoRA (192 Parameter Tensors)</td></tr>
+            <tr><td class="label">Raw Model Token</td><td>"${escapeHtml(result.raw_answer || result.answer)}"</td></tr>
             <tr><td class="label">Confidence Score</td><td>${result.confidence_percent}% (${result.confidence_label})</td></tr>
             <tr><td class="label">Calibration Method</td><td>Platt-Scaled Logistic Calibration (ECE: 0.0336)</td></tr>
             <tr><td class="label">Candidate Consensus</td><td>${result.samples_used} Decoding Iterations</td></tr>

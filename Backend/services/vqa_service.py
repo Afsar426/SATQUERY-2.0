@@ -114,6 +114,72 @@ def normalize_answer(text: str) -> str:
 
 
 # ============================================================
+# ANSWER DISPLAY FORMATTER
+# ============================================================
+
+def format_answer_for_display(raw_answer: str) -> str:
+    """Format short VQA answers for a natural UI display.
+
+    This does NOT change the raw model output or validation metric.
+    """
+
+    if not raw_answer:
+        return "No answer generated."
+
+    answer = str(raw_answer).strip()
+    clean = answer.rstrip(" .,!?:;")
+
+    if not clean:
+        return "No answer generated."
+
+    lower = clean.lower()
+
+    if lower == "yes":
+        return "Yes, the described object or feature is visible in the image."
+
+    if lower == "no":
+        return "No, the described object or feature is not visible in the image."
+
+    if lower in {"none", "nothing", "neither"}:
+        return "No such feature or object is visible in the image."
+
+    if lower in {"unknown", "unclear", "uncertain"}:
+        return "The feature is unclear or indistinguishable in the image."
+
+    if re.fullmatch(r"\d+(?:\.\d+)?", clean):
+        return f"The observed count is {clean}."
+
+    colors = {
+        "red", "green", "blue", "yellow",
+        "black", "white", "gray", "grey",
+        "brown", "orange", "pink", "purple"
+    }
+
+    if lower in colors:
+        return f"The observed color is {clean}."
+
+    directions = {
+        "left", "right", "top", "bottom",
+        "north", "south", "east", "west",
+        "center", "centre", "middle"
+    }
+
+    if lower in directions:
+        return f"The object is located on the {clean}."
+
+    if len(clean.split()) >= 4:
+        return clean + "."
+
+    if lower.startswith(("a ", "an ", "the ")):
+        return f"{clean[0].upper() + clean[1:]} is visible in the image."
+
+    first_word = clean.split()[0]
+    article = "An" if first_word[0].lower() in "aeiou" else "A"
+
+    return f"{article} {clean} is visible in the image."
+
+
+# ============================================================
 # FALLBACK CONFIDENCE LABEL
 # ============================================================
 
@@ -591,6 +657,15 @@ class VQAService:
             )
 
         # ----------------------------------------------------
+        # UI DISPLAY ANSWER
+        # ----------------------------------------------------
+        # Keep the original model answer unchanged.
+        # Only format a separate answer for frontend display.
+        display_answer = format_answer_for_display(
+            primary_answer
+        )
+
+        # ----------------------------------------------------
         # ADDITIONAL SAMPLES
         # ----------------------------------------------------
 
@@ -696,7 +771,12 @@ class VQAService:
 
         return {
 
+            # Natural sentence for frontend display.
             "answer":
+                display_answer,
+
+            # Original model output for trace/debugging.
+            "raw_answer":
                 primary_answer,
 
             "confidence":

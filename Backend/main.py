@@ -270,6 +270,11 @@ async def vqa_endpoint(
                 "",
             )
 
+            raw_answer = result.get(
+                "raw_answer",
+                answer,
+            )
+
             confidence = result.get(
                 "confidence",
                 None,
@@ -290,17 +295,30 @@ async def vqa_endpoint(
                 None,
             )
 
+            consistency = result.get(
+                "consistency",
+                None,
+            )
+
+            confidence_calibrated = result.get(
+                "confidence_calibrated",
+                True,
+            )
+
         else:
 
             # Backward compatibility if
             # vqa_service.ask() returns only string
 
             answer = str(result)
+            raw_answer = str(result)
 
             confidence = None
             confidence_percent = None
             confidence_label = "Unavailable"
             samples_used = None
+            consistency = None
+            confidence_calibrated = False
 
 
         # ----------------------------------------------------
@@ -317,6 +335,7 @@ async def vqa_endpoint(
 
         print()
         print("Answer     :", answer)
+        print("Raw Answer :", raw_answer)
         print(
             "Confidence :",
             confidence_percent,
@@ -338,12 +357,15 @@ async def vqa_endpoint(
             "feature": "vqa",
             "question": question,
             "answer": answer,
+            "raw_answer": raw_answer,
 
             "confidence": confidence,
             "confidence_percent": confidence_percent,
             "confidence_label": confidence_label,
 
             "samples_used": samples_used,
+            "consistency": consistency,
+            "confidence_calibrated": confidence_calibrated,
             "image_metadata": {
                 "filename": filename,
                 "size_mb": file_size_mb,
