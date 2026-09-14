@@ -1,6 +1,6 @@
-# 🛰️ SatQuery AI 2.0
+#  SatQuery AI 2.0
 
-### 🌍 Earth Observation Intelligence • Remote-Sensing VQA • Evidence-Driven Analysis
+###  Earth Observation Intelligence • Remote-Sensing VQA • Evidence-Driven Analysis
 
 [![Project](https://img.shields.io/badge/Project-SatQuery%20AI-0B3B60?style=for-the-badge&logo=satellite&logoColor=white)](#-satquery-ai-20)
 [![Domain](https://img.shields.io/badge/Domain-Earth%20Observation-0E7490?style=for-the-badge)](#-overview)
@@ -14,36 +14,36 @@
 
 ---
 
-## 🧭 Table of Contents
+## Table of Contents
 
-- [✨ Overview](#-overview)
-- [🎯 Problem](#-problem)
-- [💡 Solution](#-solution)
-- [🚀 Current Capabilities](#-current-capabilities)
-- [🧠 Model Stack](#-model-stack)
-- [🏗️ System Architecture](#️-system-architecture)
-- [🔄 Inference Workflow](#-inference-workflow)
-- [📊 Confidence & Calibration](#-confidence--calibration)
-- [📈 Evaluation Evidence](#-evaluation-evidence)
-- [🛰️ Remote-Sensing Research](#️-remote-sensing-research)
-- [🖥️ Frontend](#️-frontend)
-- [⚙️ Backend & API](#️-backend--api)
-- [📁 Repository Structure](#-repository-structure)
-- [💻 Hardware & Software Requirements](#-hardware--software-requirements)
-- [🛠️ Installation](#️-installation)
-- [▶️ Running the Application](#️-running-the-application)
-- [🔌 API Reference](#-api-reference)
-- [🧪 Validation & Evidence](#-validation--evidence)
-- [🗺️ Roadmap](#️-roadmap)
-- [⚠️ Current Scope & Limitations](#️-current-scope--limitations)
-- [🔐 Security Notes](#-security-notes)
-- [🤝 Contributing](#-contributing)
-- [📜 License](#-license)
-- [👥 Team](#-team)
+- [ Overview](#-overview)
+- [ Problem](#-problem)
+- [ Solution](#-solution)
+- [ Current Capabilities](#-current-capabilities)
+- [ Model Stack](#-model-stack)
+- [ System Architecture](#️-system-architecture)
+- [ Inference Workflow](#-inference-workflow)
+- [ Confidence & Calibration](#-confidence--calibration)
+- [ Evaluation Evidence](#-evaluation-evidence)
+- [ Remote-Sensing Research](#️-remote-sensing-research)
+- [ Frontend](#️-frontend)
+- [ Backend & API](#️-backend--api)
+- [ Repository Structure](#-repository-structure)
+- [ Hardware & Software Requirements](#-hardware--software-requirements)
+- [ Installation](#️-installation)
+- [ Running the Application](#️-running-the-application)
+- [ API Reference](#-api-reference)
+- [ Validation & Evidence](#-validation--evidence)
+- [ Roadmap](#️-roadmap)
+- [ Current Scope & Limitations](#️-current-scope--limitations)
+- [ Security Notes](#-security-notes)
+- [ Contributing](#-contributing)
+- [ License](#-license)
+- [ Team](#-team)
 
 ---
 
-## ✨ Overview
+##  Overview
 
 SatQuery AI is designed around a simple interaction model:
 
@@ -80,16 +80,16 @@ The repository currently focuses on the **Phase 1 operational baseline: single-i
 
 ---
 
-## 🎯 Problem
+##  Problem
 
 Traditional remote-sensing analysis often requires:
 
-- 🧩 Specialized GIS and image-analysis workflows
-- 🧠 Domain-specific technical knowledge
-- 🛠️ Multiple tools for different analytical tasks
-- 🛰️ Careful handling of geospatial raster data
-- ⏱️ Manual interpretation of satellite scenes
-- 📊 Reliable evaluation rather than unsupported AI answers
+-  Specialized GIS and image-analysis workflows
+-  Domain-specific technical knowledge
+-  Multiple tools for different analytical tasks
+-  Careful handling of geospatial raster data
+-  Manual interpretation of satellite scenes
+-  Reliable evaluation rather than unsupported AI answers
 
 Generic vision-language systems can describe an image, but remote-sensing imagery introduces additional challenges such as scale, spatial context, sensor-specific information, and scientific interpretation.
 
@@ -97,50 +97,50 @@ Generic vision-language systems can describe an image, but remote-sensing imager
 
 ---
 
-## 💡 Solution
+##  Solution
 
 SatQuery provides an interactive workflow:
 
-1. 📤 Upload a supported satellite raster.
-2. 💬 Enter a natural-language question.
-3. 🧠 Run the adapted remote-sensing VQA model.
-4. 📝 Generate a concise answer.
-5. 🎯 Estimate confidence from multi-sample answer consistency.
-6. 📐 Apply post-hoc confidence calibration.
-7. 📋 Expose model/evaluation evidence through the application.
+1.  Upload a supported satellite raster.
+2.  Enter a natural-language question.
+3.  Run the adapted remote-sensing VQA model.
+4.  Generate a concise answer.
+5.  Estimate confidence from multi-sample answer consistency.
+6.  Apply post-hoc confidence calibration.
+7.  Expose model/evaluation evidence through the application.
 
 The current backend accepts **GeoTIFF/TIFF inputs up to 50 MB** and exposes a dedicated `/api/vqa` endpoint.
 
 ---
 
-## 🚀 Current Capabilities
+##  Current Capabilities
 
 | Capability | Status |
 |---|---|
-| 🛰️ GeoTIFF/TIFF upload | ✅ Available |
-| 📤 Drag & drop upload | ✅ Available |
-| 💬 Natural-language VQA | ✅ Available |
-| 🌐 Multilingual query UI | ✅ UI-supported |
-| 👁️ InternVL3-1B backbone | ✅ Integrated |
-| 🧩 VQA-10K LoRA adapter | ✅ Integrated |
-| 🎯 Confidence estimation | ✅ Integrated |
-| 📐 Confidence calibration | ✅ Integrated |
-| 📊 Training/evaluation evidence | ✅ Integrated |
-| 📄 Analysis report workflow | ✅ Implemented in UI |
-| 🎯 Spatial grounding | 🟡 Planned |
-| 📝 Dense captioning | 🟡 Planned |
-| 🕒 Bi-temporal change analysis | 🟡 Planned |
-| 🛰️ Optical + SAR fusion | 🟡 Experimental / Planned |
-| 🤖 Agentic orchestration | 🟡 Planned |
-| 🌍 GeoAI / OSM integration | 🟡 Planned |
+|  GeoTIFF/TIFF upload | ✅ Available |
+|  Drag & drop upload | ✅ Available |
+|  Natural-language VQA | ✅ Available |
+|  Multilingual query UI | ✅ UI-supported |
+|  InternVL3-1B backbone | ✅ Integrated |
+|  VQA-10K LoRA adapter | ✅ Integrated |
+|  Confidence estimation | ✅ Integrated |
+|  Confidence calibration | ✅ Integrated |
+|  Training/evaluation evidence | ✅ Integrated |
+|  Analysis report workflow | ✅ Implemented in UI |
+|  Spatial grounding | 🟡 Planned |
+|  Dense captioning | 🟡 Planned |
+|  Bi-temporal change analysis | 🟡 Planned |
+|  Optical + SAR fusion | 🟡 Experimental / Planned |
+|  Agentic orchestration | 🟡 Planned |
+|  GeoAI / OSM integration | 🟡 Planned |
 
 > **Important:** The repository's current backend explicitly exposes VQA as available, while the other capabilities are marked as `coming_soon` or planned in the frontend roadmap.
 
 ---
 
-# 🧠 Model Stack
+#  Model Stack
 
-## 👁️ Vision-Language Backbone
+##  Vision-Language Backbone
 
 **OpenGVLab/InternVL3-1B**
 
@@ -159,7 +159,7 @@ Max New Tokens   : 32
 
 ---
 
-## 🧩 Parameter-Efficient Adaptation
+##  Parameter-Efficient Adaptation
 
 Instead of modifying the complete base model, the repository uses **PEFT/LoRA**.
 
@@ -177,7 +177,7 @@ This makes the adaptation substantially lighter than full-model fine-tuning.
 
 ---
 
-## 📚 Training Cohort
+##  Training Cohort
 
 The repository documents a **10,000-sample remote-sensing VQA cohort**, including:
 
@@ -190,25 +190,25 @@ Training evidence records an optimization loss of approximately **0.738394**.
 
 ---
 
-# 🏗️ System Architecture
+#  System Architecture
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│                     🧑‍💻 USER INTERFACE                   │
+│                      USER INTERFACE                   │
 │                                                          │
-│  📤 Image Upload  +  💬 Natural-Language Question        │
+│   Image Upload  +   Natural-Language Question        │
 └──────────────────────────┬───────────────────────────────┘
                            │
                            ▼
 ┌──────────────────────────────────────────────────────────┐
-│                 🌐 NODE.JS FRONTEND SERVER                │
+│                  NODE.JS FRONTEND SERVER                │
 │                                                          │
 │  Static Assets • SPA Routing • API Proxy • Port 3000     │
 └──────────────────────────┬───────────────────────────────┘
                            │
                            ▼
 ┌──────────────────────────────────────────────────────────┐
-│                    ⚡ FASTAPI BACKEND                     │
+│                     FASTAPI BACKEND                     │
 │                         Port 8000                         │
 │                                                          │
 │  Validation • Upload Handling • VQA API • Health API     │
@@ -216,21 +216,21 @@ Training evidence records an optimization loss of approximately **0.738394**.
                            │
                            ▼
 ┌──────────────────────────────────────────────────────────┐
-│                     🧠 VQA SERVICE                       │
+│                      VQA SERVICE                       │
 │                                                          │
 │  InternVL3-1B → VQA-10K LoRA → Answer Generation         │
 └──────────────────────────┬───────────────────────────────┘
                            │
                            ▼
 ┌──────────────────────────────────────────────────────────┐
-│              🎯 CONFIDENCE & CALIBRATION                 │
+│               CONFIDENCE & CALIBRATION                 │
 │                                                          │
 │  Multi-sample consistency → Logistic calibration         │
 └──────────────────────────┬───────────────────────────────┘
                            │
                            ▼
 ┌──────────────────────────────────────────────────────────┐
-│                     📊 RESULT                            │
+│                      RESULT                            │
 │                                                          │
 │  Answer • Confidence • Confidence Tier • Metadata        │
 └──────────────────────────────────────────────────────────┘
@@ -238,9 +238,9 @@ Training evidence records an optimization loss of approximately **0.738394**.
 
 ---
 
-# 🔄 Inference Workflow
+#  Inference Workflow
 
-### 01 — 📤 Upload
+### 01 —  Upload
 
 The frontend accepts:
 
@@ -250,7 +250,7 @@ The frontend accepts:
 
 with a **50 MB maximum upload size**.
 
-### 02 — 🛡️ Validation
+### 02 —  Validation
 
 The backend validates:
 
@@ -260,7 +260,7 @@ The backend validates:
 - Temporary file creation
 - Model response validity
 
-### 03 — 🖼️ Preprocessing
+### 03 —  Preprocessing
 
 The current VQA service:
 
@@ -271,11 +271,11 @@ The current VQA service:
 - Normalizes using ImageNet-style mean/std
 - Moves it to CUDA when available
 
-### 04 — 🤖 Inference
+### 04 —  Inference
 
 The image and question are passed to InternVL3-1B with the trained VQA-10K LoRA adapter.
 
-### 05 — 🔁 Multi-Sample Consistency
+### 05 —  Multi-Sample Consistency
 
 The service generates:
 
@@ -289,15 +289,15 @@ The service generates:
 
 The answers are normalized and compared.
 
-### 06 — 🎯 Confidence
+### 06 —  Confidence
 
 The system calculates a consistency score based on the majority answer.
 
-### 07 — 📐 Calibration
+### 07 —  Calibration
 
 If the calibration artifact exists, the consistency score is transformed using the stored logistic calibration parameters.
 
-### 08 — 📦 API Response
+### 08 —  API Response
 
 The final response includes:
 
@@ -322,7 +322,7 @@ The final response includes:
 
 ---
 
-# 📊 Confidence & Calibration
+#  Confidence & Calibration
 
 SatQuery does **not simply display an arbitrary confidence number**.
 
@@ -385,29 +385,29 @@ The repository documents a 1,000-sample validation cohort.
 
 | Evaluation Suite | Samples | Correct | Accuracy |
 |---|---:|---:|---:|
-| 🛰️ RSVQA | 500 | 339 | **67.80%** |
-| 🌍 VRSBench | 500 | 277 | **55.40%** |
-| 📊 Overall | 1,000 | 616 | **61.60%** |
+|  RSVQA | 500 | 339 | **67.80%** |
+|  VRSBench | 500 | 277 | **55.40%** |
+|  Overall | 1,000 | 616 | **61.60%** |
 
 ### Training Evidence
 
 ```text
-📉 Average / reported training loss : 0.7384
-🧩 LoRA changed tensors             : 192
-⚪ LoRA unchanged tensors           : 0
-📊 Overall validation accuracy      : 61.60%
-📐 ECE                              : 0.0336
+ Average / reported training loss : 0.7384
+ LoRA changed tensors             : 192
+ LoRA unchanged tensors           : 0
+ Overall validation accuracy      : 61.60%
+ ECE                              : 0.0336
 ```
 
 > These figures are repository-documented evidence and should be treated as benchmark/reporting results for the current VQA baseline, not as a universal claim of accuracy on every satellite-image distribution.
 
 ---
 
-# 🛰️ Remote-Sensing Research
+#  Remote-Sensing Research
 
 The repository also documents experimental work beyond the current VQA deployment.
 
-## 🛰️ Optical + SAR
+##  Optical + SAR
 
 The research documentation describes:
 
@@ -443,17 +443,17 @@ Node.js HTTP Server
 
 ### UI capabilities
 
-- 🛰️ Earth-observation themed interface
-- 📤 Drag-and-drop image upload
-- 🖼️ Image preview
-- 💬 Natural-language query box
-- ⌨️ Ctrl/Cmd + Enter shortcut
-- 📊 Result hierarchy
-- 🎯 Confidence visualization
-- 📋 Evidence-oriented pages
-- 🗺️ Documentation and roadmap views
-- 👥 Team / project pages
-- 📄 Analysis reporting workflow
+-  Earth-observation themed interface
+-  Drag-and-drop image upload
+-  Image preview
+-  Natural-language query box
+-  Ctrl/Cmd + Enter shortcut
+-  Result hierarchy
+-  Confidence visualization
+-  Evidence-oriented pages
+-  Documentation and roadmap views
+-  Team / project pages
+-  Analysis reporting workflow
 
 ### Frontend routes
 
@@ -474,42 +474,42 @@ The application uses a client-side page router and serves the SPA through `front
 
 The backend is implemented using:
 
-- 🐍 Python 3.11
-- ⚡ FastAPI
-- 🚀 Uvicorn
-- 🔥 PyTorch
-- 🤗 Transformers
-- 🧩 PEFT
-- 🖼️ Pillow
-- 🗺️ Rasterio
-- 📐 NumPy / SciPy
-- 📊 scikit-learn
+-  Python 3.11
+-  FastAPI
+-  Uvicorn
+-  PyTorch
+-  Transformers
+-  PEFT
+-  Pillow
+-  Rasterio
+-  NumPy / SciPy
+-  scikit-learn
 
 ### Backend responsibilities
 
 ```text
-📥 Receive Upload
+ Receive Upload
       ↓
-🛡️ Validate Request
+ Validate Request
       ↓
-💾 Temporary Storage
+ Temporary Storage
       ↓
-🖼️ Image Preprocessing
+ Image Preprocessing
       ↓
-🧠 VQA Inference
+ VQA Inference
       ↓
-🎯 Confidence
+ Confidence
       ↓
-📐 Calibration
+ Calibration
       ↓
-📦 JSON Response
+ JSON Response
       ↓
-🧹 Temporary Cleanup
+ Temporary Cleanup
 ```
 
 ---
 
-# 🔌 API Reference
+#  API Reference
 
 ## `GET /`
 
@@ -600,30 +600,30 @@ Supported formats: .tif, .tiff, .geotiff
 
 ---
 
-# 📁 Repository Structure
+#  Repository Structure
 
 ```text
 SATQUERY-2.0/
 │
-├── 🧠 Backend/
-│   ├── 🔬 calibration/
+├──  Backend/
+│   ├──  calibration/
 │   │   └── confidence_calibrator.json
 │   │
-│   ├── 💾 checkpoints/
+│   ├──  checkpoints/
 │   │   └── vqa_10k/
 │   │
-│   ├── ⚡ main.py
-│   ├── 📦 satquery_requirements_exact.txt
+│   ├──  main.py
+│   ├──  satquery_requirements_exact.txt
 │   │
-│   └── 🧩 services/
+│   └──  services/
 │       └── vqa_service.py
 │
-├── 🖥️ frontend/
-│   ├── 📦 package.json
-│   ├── 🌐 server.js
+├──  frontend/
+│   ├──  package.json
+│   ├──  server.js
 │   │
 │   └── public/
-│       ├── 🏠 index.html
+│       ├──  index.html
 │       ├── assets/
 │       ├── js/
 │       │   ├── app.js
@@ -638,14 +638,14 @@ SATQUERY-2.0/
 │       └── styles/
 │           └── satquery.css
 │
-├── 🛰️ hero-earth.jpg
-├── 📄 README.md
-└── ⚙️ .gitignore
+├──  hero-earth.jpg
+├──  README.md
+└──  .gitignore
 ```
 
 ---
 
-# 💻 Hardware & Software Requirements
+#  Hardware & Software Requirements
 
 The repository's exact GPU environment targets:
 
@@ -662,24 +662,24 @@ PyTorch          : 2.5.1
 The repository intentionally does **not** include:
 
 ```text
-❌ flash-attn
-❌ bitsandbytes
+ flash-attn
+ bitsandbytes
 ```
 
 The documented reason is Windows compatibility / controlled introduction of quantization tooling.
 
 ---
 
-# 🛠️ Installation
+#  Installation
 
-## 1️⃣ Clone the repository
+## 1️ Clone the repository
 
 ```bash
 git clone <YOUR_REPOSITORY_URL>
 cd SATQUERY-2.0
 ```
 
-## 2️⃣ Create the Python environment
+## 2️ Create the Python environment
 
 ### Windows
 
@@ -694,7 +694,7 @@ py -3.11 -m venv satquery_env
 python -m pip install --upgrade pip
 ```
 
-## 3️⃣ Install backend dependencies
+## 3️ Install backend dependencies
 
 ```bash
 pip install -r Backend/satquery_requirements_exact.txt
@@ -704,9 +704,9 @@ pip install -r Backend/satquery_requirements_exact.txt
 
 ---
 
-# ▶️ Running the Application
+#  Running the Application
 
-## 🧠 Start Backend
+##  Start Backend
 
 ```bash
 cd Backend
@@ -727,7 +727,7 @@ http://localhost:8000/health
 
 ---
 
-## 🖥️ Start Frontend
+##  Start Frontend
 
 Open another terminal:
 
@@ -746,7 +746,7 @@ The Node server proxies `/api/*` and `/health` requests to the FastAPI backend o
 
 ---
 
-# 🔗 Runtime Architecture
+#  Runtime Architecture
 
 ```text
 Browser
@@ -754,42 +754,42 @@ Browser
   │ HTTP :3000
   ▼
 ┌──────────────────────┐
-│ 🖥️ Node.js Server    │
+│  Node.js Server    │
 │ Static + SPA + Proxy │
 └──────────┬───────────┘
            │
            │ /api/*
            ▼
 ┌──────────────────────┐
-│ ⚡ FastAPI :8000      │
+│  FastAPI :8000      │
 │ Validation + VQA API │
 └──────────┬───────────┘
            │
            ▼
 ┌──────────────────────┐
-│ 🧠 VQAService        │
+│  VQAService        │
 │ InternVL3-1B + LoRA  │
 └──────────┬───────────┘
            │
            ▼
 ┌──────────────────────┐
-│ 🎯 Calibration       │
+│  Calibration       │
 │ Consistency → Score  │
 └──────────┬───────────┘
            │
            ▼
-      📦 JSON Result
+       JSON Result
 ```
 
 ---
 
-# 🧪 Validation & Evidence
+#  Validation & Evidence
 
 SatQuery includes an explicit evidence-oriented design rather than presenting the model as an unexplained black box.
 
 The UI documents:
 
-### 🔬 Model Evidence
+###  Model Evidence
 
 - Base model
 - LoRA configuration
@@ -797,20 +797,20 @@ The UI documents:
 - Training loss
 - Checkpoint information
 
-### 📊 Evaluation Evidence
+###  Evaluation Evidence
 
 - RSVQA validation
 - VRSBench validation
 - Overall validation cohort
 
-### 🎯 Calibration Evidence
+###  Calibration Evidence
 
 - Multi-sample consistency
 - Logistic calibration
 - ECE measurement
 - Confidence tiers
 
-### 🧾 Inference Evidence
+###  Inference Evidence
 
 - Query
 - Answer
@@ -821,7 +821,7 @@ The UI documents:
 
 ---
 
-# 🗺️ Roadmap
+#  Roadmap
 
 The repository defines a staged expansion strategy.
 
@@ -860,11 +860,11 @@ Geospatial Intelligence / GeoAI
 Complete SatQuery Ecosystem
 ```
 
-### Phase 2 — 🎯 Grounding + Captioning
+### Phase 2 —  Grounding + Captioning
 
 Spatial localization and dense scene interpretation.
 
-### Phase 3 — 🕒 Bi-Temporal Analysis
+### Phase 3 —  Bi-Temporal Analysis
 
 Compare T1/T2 imagery for changes such as:
 
@@ -873,15 +873,15 @@ Compare T1/T2 imagery for changes such as:
 - Deforestation
 - Other temporal scene changes
 
-### Phase 4 — 🛰️ Optical + SAR
+### Phase 4 —  Optical + SAR
 
 Combine optical multispectral information with radar observations.
 
-### Phase 5 — 🤖 Agentic Orchestration
+### Phase 5 —  Agentic Orchestration
 
 Connect VQA models, GIS tools such as GDAL/Rasterio, and external geospatial data sources.
 
-### Phase 6 — 🌍 GeoAI
+### Phase 6 —  GeoAI
 
 Introduce:
 
@@ -890,7 +890,7 @@ Introduce:
 - Geocoding
 - OpenStreetMap integration
 
-### Phase 7 — 🚀 Full Ecosystem
+### Phase 7 —  Full Ecosystem
 
 Long-term vision for a conversational Earth-observation intelligence platform for:
 
@@ -901,57 +901,57 @@ Long-term vision for a conversational Earth-observation intelligence platform fo
 
 ---
 
-# ⚠️ Current Scope & Limitations
+#  Current Scope & Limitations
 
 SatQuery 2.0 should currently be understood as a **VQA-first system**.
 
 ### Current limitations
 
-- 🛰️ Current backend exposes VQA as the production/available capability.
-- 🎯 Grounding is not yet exposed as a backend endpoint.
-- 🕒 Bi-temporal change detection is planned.
-- 🛰️ Optical-SAR fusion is experimental/planned.
-- 🤖 Full agentic model routing is planned.
-- 🌍 Full geospatial intelligence integration is planned.
-- 📊 Benchmark performance can vary substantially across datasets and sensor distributions.
-- 🧠 VQA should not be treated as an exact object-counting or measurement engine without a dedicated specialist model.
-- 🔐 The current development CORS configuration is permissive and should be hardened before production deployment.
+-  Current backend exposes VQA as the production/available capability.
+-  Grounding is not yet exposed as a backend endpoint.
+-  Bi-temporal change detection is planned.
+-  Optical-SAR fusion is experimental/planned.
+-  Full agentic model routing is planned.
+-  Full geospatial intelligence integration is planned.
+-  Benchmark performance can vary substantially across datasets and sensor distributions.
+-  VQA should not be treated as an exact object-counting or measurement engine without a dedicated specialist model.
+-  The current development CORS configuration is permissive and should be hardened before production deployment.
 
 ---
 
-# 🔐 Security Notes
+#  Security Notes
 
 Before production deployment, consider:
 
-- 🔑 Authentication and authorization
-- 🌐 Restricting CORS origins
-- 📦 Upload MIME/content validation
-- 🧹 Strict temporary-file lifecycle management
-- 📏 Server-side payload limits
-- 🛡️ Rate limiting
-- 📝 Structured request logging
-- 🚫 Avoiding sensitive data in logs
-- 🔒 HTTPS/TLS
-- 🧪 Dependency vulnerability scanning
-- 🧰 Production-grade process management
+-  Authentication and authorization
+-  Restricting CORS origins
+-  Upload MIME/content validation
+-  Strict temporary-file lifecycle management
+-  Server-side payload limits
+-  Rate limiting
+-  Structured request logging
+-  Avoiding sensitive data in logs
+-  HTTPS/TLS
+-  Dependency vulnerability scanning
+-  Production-grade process management
 
 The current repository is best treated as an **engineering prototype / research deployment baseline**, not a hardened public production service.
 
 ---
 
-# 🧩 Design Philosophy
+#  Design Philosophy
 
 SatQuery follows four principles:
 
-### 1. 🗣️ Natural Language First
+### 1.  Natural Language First
 
 Users interact with satellite imagery through questions rather than complex command pipelines.
 
-### 2. 🧠 Parameter-Efficient Adaptation
+### 2.  Parameter-Efficient Adaptation
 
 LoRA/PEFT adapts a pretrained VLM instead of requiring full-model retraining.
 
-### 3. 🎯 Confidence-Aware Answers
+### 3.  Confidence-Aware Answers
 
 The system exposes calibrated confidence rather than presenting every prediction with equal certainty.
 
@@ -961,7 +961,7 @@ Training, evaluation, calibration, and inference information are surfaced as fir
 
 ---
 
-# 🌟 Why SatQuery?
+#  Why SatQuery?
 
 ```text
 Traditional EO Workflow
@@ -997,7 +997,7 @@ The long-term goal is not to replace remote-sensing experts.
 
 ---
 
-# 🤝 Contributing
+#  Contributing
 
 Contributions are welcome.
 
@@ -1009,16 +1009,16 @@ git checkout -b feature/your-feature
 
 Make your changes, validate locally, then open a pull request with:
 
-- 📝 Problem statement
-- 💡 Proposed change
-- 🧪 Validation performed
-- 📊 Relevant metrics
-- 🖼️ UI screenshots when applicable
-- ⚠️ Known limitations
+-  Problem statement
+-  Proposed change
+-  Validation performed
+-  Relevant metrics
+-  UI screenshots when applicable
+-  Known limitations
 
 ---
 
-# 📜 License
+#  License
 
 This repository currently declares the **ISC License** in `frontend/package.json`.
 
@@ -1026,60 +1026,60 @@ For any redistribution or deployment, review the repository's licensing files an
 
 ---
 
-# 👥 Team
+#  Team : vision x
 
-### 🛰️ SatQuery AI Team
+###  SatQuery 
 
 Building an intelligent interface for Earth Observation and remote-sensing analysis.
 
-> **Ask the Earth. Get Answers.** 🌍
+> **Ask the Earth. Get Answers.** 
 
 ---
 
-## ⭐ Project Snapshot
+##  Project Snapshot
 
 | Layer | Technology |
 |---|---|
-| 🖥️ Frontend | HTML5 + CSS3 + JavaScript |
-| 🌐 Frontend Server | Node.js |
-| ⚡ Backend API | FastAPI |
-| 🧠 VLM | InternVL3-1B |
-| 🧩 Adaptation | VQA-10K LoRA / PEFT |
-| 🔥 ML Runtime | PyTorch |
-| 🖼️ Image Processing | Pillow / tifffile |
-| 🗺️ EO Raster Support | Rasterio |
-| 📊 Evaluation | RSVQA + VRSBench |
-| 🎯 Calibration | Logistic / Platt-style scaling |
-| 📄 Reporting | Analysis/evidence workflow |
-| 🛰️ Future | Grounding + Change + SAR + Agentic GeoAI |
+|  Frontend | HTML5 + CSS3 + JavaScript |
+|  Frontend Server | Node.js |
+|  Backend API | FastAPI |
+|  VLM | InternVL3-1B |
+|  Adaptation | VQA-10K LoRA / PEFT |
+|  ML Runtime | PyTorch |
+|  Image Processing | Pillow / tifffile |
+|  EO Raster Support | Rasterio |
+|  Evaluation | RSVQA + VRSBench |
+|  Calibration | Logistic / Platt-style scaling |
+|  Reporting | Analysis/evidence workflow |
+|  Future | Grounding + Change + SAR + Agentic GeoAI |
 
 ---
 
-## 🛰️ Final Architecture Vision
+##  Final Architecture Vision
 
 ```text
-                         🌍 SATQUERY AI
+                          SATQUERY AI
                               │
                     Natural-Language Query
                               │
                               ▼
-                    🧠 Intelligent Agent
+                     Intelligent Agent
                               │
              ┌────────────────┼────────────────┐
              ▼                ▼                ▼
-          👁️ VQA         🎯 Grounding      🕒 Change
+           VQA          Grounding          Change
              │                │                │
              └────────────────┼────────────────┘
                               │
-                         🛰️ SAR + Optical
+                          SAR + Optical
                               │
                               ▼
-                    🔀 Result Coordination
+                     Result Coordination
                               │
-                    🎯 Confidence + Evidence
+                     Confidence + Evidence
                               │
                               ▼
-                     📋 Verified Insight
+                      Verified Insight
 ```
 
-> **From satellite pixels to understandable intelligence. 🛰️🌍**
+> **From satellite pixels to understandable intelligence. **
