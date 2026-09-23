@@ -1,24 +1,17 @@
-// ============================================================
-// SATQUERY AI - FRONTEND APPLICATION SERVER
-// Serves Static Files, Handles SPA Page Routing & API Proxy
-// Port: 3000
-// ============================================================
-
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
-const BACKEND_HOST = process.env.BACKEND_HOST || '127.0.0.1';
-const BACKEND_PORT = parseInt(process.env.BACKEND_PORT || '8000', 10);
+const BACKEND_URL = process.env.BACKEND_URL || 'http://127.0.0.1:8000';
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=UTF-8',
   '.css': 'text/css; charset=UTF-8',
   '.js': 'application/javascript; charset=UTF-8',
-  '.mjs': 'application/javascript; charset=UTF-8',
   '.json': 'application/json; charset=UTF-8',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
@@ -32,11 +25,12 @@ const MIME_TYPES = {
   '.txt': 'text/plain; charset=UTF-8',
 };
 
+const backend = new URL(BACKEND_URL);
+
 const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url);
   const pathname = decodeURIComponent(parsedUrl.pathname);
 
-  // Set permissive CORS headers for development
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
@@ -47,18 +41,17 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // ----------------------------------------------------------
-  // API PROXY -> Backend (http://127.0.0.1:8000)
-  // Supports streaming up to 50 MB uploads
-  // ----------------------------------------------------------
   if (pathname.startsWith('/api/') || pathname === '/health') {
     const proxyHeaders = { ...req.headers };
-    proxyHeaders.host = `${BACKEND_HOST}:${BACKEND_PORT}`;
+    delete proxyHeaders.host;
 
-    const proxyReq = http.request(
+    const transport = backend.protocol === 'https:' ? https : http;
+
+    const proxyReq = transport.request(
       {
-        host: BACKEND_HOST,
-        port: BACKEND_PORT,
+        protocol: backend.protocol,
+        hostname: backend.hostname,
+        port: backend.port || (backend.protocol === 'https:' ? 443 : 80),
         path: req.url,
         method: req.method,
         headers: proxyHeaders,
@@ -72,17 +65,15 @@ const server = http.createServer((req, res) => {
     );
 
     proxyReq.on('error', (err) => {
-      console.warn(`[Proxy Warning] Backend offline at ${BACKEND_HOST}:${BACKEND_PORT}:`, err.message);
+      console.warn(`[Proxy Warning] Backend unavailable at ${BACKEND_URL}:`, err.message);
+
       if (!res.headersSent) {
         res.writeHead(503, { 'Content-Type': 'application/json' });
-        res.end(
-          JSON.stringify({
-            success: false,
-            error: 'SatQuery backend service is not reachable on port 8000.',
-            detail: err.message,
-            suggestion: 'Start the backend using: cd Backend && python3 main.py',
-          })
-        );
+        res.end(JSON.stringify({
+          success: false,
+          error: 'SatQuery backend service is not reachable.',
+          detail: err.message,
+        }));
       }
     });
 
@@ -95,12 +86,8 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // ----------------------------------------------------------
-  // STATIC ASSET SERVING
-  // ----------------------------------------------------------
   let filePath = path.join(PUBLIC_DIR, pathname);
 
-  // Prevent directory traversal
   if (!filePath.startsWith(PUBLIC_DIR)) {
     res.writeHead(403, { 'Content-Type': 'text/plain' });
     res.end('403 Forbidden');
@@ -116,8 +103,9 @@ const server = http.createServer((req, res) => {
         'Content-Type': contentType,
         'Cache-Control': ext === '.html' ? 'no-cache' : 'public, max-age=3600',
       });
+
       const stream = fs.createReadStream(filePath);
-      stream.on('error', (streamErr) => {
+      stream.on('error', () => {
         if (!res.headersSent) {
           res.writeHead(500, { 'Content-Type': 'text/plain' });
           res.end('500 Error streaming file');
@@ -127,11 +115,8 @@ const server = http.createServer((req, res) => {
       return;
     }
 
-    // --------------------------------------------------------
-    // SPA ROUTING FALLBACK -> /public/index.html
-    // For /, /analysis, /documentation, /team, /roadmap, /evidence
-    // --------------------------------------------------------
     const indexPath = path.join(PUBLIC_DIR, 'index.html');
+
     fs.readFile(indexPath, (readErr, content) => {
       if (readErr) {
         if (!res.headersSent) {
@@ -140,6 +125,7 @@ const server = http.createServer((req, res) => {
         }
         return;
       }
+
       if (!res.headersSent) {
         res.writeHead(200, {
           'Content-Type': 'text/html; charset=UTF-8',
@@ -160,8 +146,6 @@ process.on('unhandledRejection', (reason) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`============================================================`);
-  console.log(`✓ SatQuery AI Frontend running at: http://localhost:${PORT}`);
-  console.log(`✓ Proxying API requests to: http://${BACKEND_HOST}:${BACKEND_PORT}`);
-  console.log(`============================================================`);
+  console.log(`✓ SatQuery frontend listening on port ${PORT}`);
+  console.log(`✓ Backend API: ${BACKEND_URL}`);
 });
