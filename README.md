@@ -148,6 +148,7 @@ layer.
 
 # 🚀 Key Capabilities
 
+
 ## 1. Single-Image VQA
 
 SatQuery processes a single remote-sensing image and answers
