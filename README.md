@@ -1,1085 +1,1077 @@
-#  SatQuery AI 2.0
+# 🛰️ SatQuery AI
 
-###  Earth Observation Intelligence • Remote-Sensing VQA • Evidence-Driven Analysis
+> **An Agentic Vision-Language Assistant for Remote-Sensing Imagery**
 
-[![Project](https://img.shields.io/badge/Project-SatQuery%20AI-0B3B60?style=for-the-badge&logo=satellite&logoColor=white)](#-satquery-ai-20)
-[![Domain](https://img.shields.io/badge/Domain-Earth%20Observation-0E7490?style=for-the-badge)](#-overview)
-[![AI](https://img.shields.io/badge/AI-Vision--Language-2563EB?style=for-the-badge&logo=openai&logoColor=white)](#-model-stack)
-[![Backend](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](#-system-architecture)
-[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](#-installation)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.5.1-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](#-model-stack)
-[![License](https://img.shields.io/badge/License-ISC-111827?style=for-the-badge)](#-license)
+<p align="center">
+  <img src="assets/satquery-ui.jpeg" alt="SatQuery AI Interface" width="95%">
+</p>
 
-> **SatQuery AI 2.0** is an advanced remote-sensing Vision-Language Question Answering platform that lets users upload satellite imagery and ask questions in natural language. The current repository provides a deployed **single-image GeoTIFF/TIFF VQA baseline** powered by **OpenGVLab/InternVL3-1B + a VQA-10K LoRA adapter**, with post-hoc confidence calibration, evidence-oriented reporting, and a FastAPI + lightweight Node.js frontend stack.
-
----
-
-## Table of Contents
-
-- [ Overview](#-overview)
-- [ Problem](#-problem)
-- [ Solution](#-solution)
-- [ Current Capabilities](#-current-capabilities)
-- [ Model Stack](#-model-stack)
-- [ System Architecture](#️-system-architecture)
-- [ Inference Workflow](#-inference-workflow)
-- [ Confidence & Calibration](#-confidence--calibration)
-- [ Evaluation Evidence](#-evaluation-evidence)
-- [ Remote-Sensing Research](#️-remote-sensing-research)
-- [ Frontend](#️-frontend)
-- [ Backend & API](#️-backend--api)
-- [ Repository Structure](#-repository-structure)
-- [ Hardware & Software Requirements](#-hardware--software-requirements)
-- [ Installation](#️-installation)
-- [ Running the Application](#️-running-the-application)
-- [ API Reference](#-api-reference)
-- [ Validation & Evidence](#-validation--evidence)
-- [ Roadmap](#️-roadmap)
-- [ Current Scope & Limitations](#️-current-scope--limitations)
-- [ Security Notes](#-security-notes)
-- [ Contributing](#-contributing)
-- [ License](#-license)
-- [ Team](#-team)
+<p align="center">
+  <b>Observe · Understand · Act</b><br>
+  Natural-language intelligence for satellite imagery
+</p>
 
 ---
+------------------------------------------------------------------------
 
-##  Overview
 
-SatQuery AI is designed around a simple interaction model:
+# 🌍 Overview
 
-```text
-             🛰️ SATELLITE IMAGE
-                     │
-                     ▼
-            📤 Upload GeoTIFF/TIFF
-                     │
-                     ▼
-             💬 Natural-Language
-                 Question
-                     │
-                     ▼
-          👁️ InternVL3-1B Backbone
-                     │
-                     ▼
-              🧩 VQA-10K LoRA
-                     │
-                     ▼
-           🧠 Answer Generation
-                     │
-             ┌───────┴────────┐
-             ▼                ▼
-        🎯 Confidence      📋 Evidence
-          Calibration       / Metrics
-             │                │
-             └───────┬────────┘
-                     ▼
-              🌍 AI Insight
+Satellite imagery contains valuable information about land cover,
+agriculture, infrastructure, water bodies, urban development,
+environmental change, and many other phenomena. However, extracting this
+information often requires specialized remote-sensing knowledge and
+task-specific processing pipelines.
+
+**SatQuery AI** is designed to provide a natural-language interface over
+these capabilities.
+
+A user can provide:
+
+-   one optical/multispectral image,
+-   one SAR image,
+-   a pair of images from different time periods,
+-   or a co-registered optical + SAR pair,
+
+and ask a question in natural language.
+
+### Example
+
+``` text
+User:
+[Satellite Image]
+
+Question:
+"What type of area is shown in this image?"
 ```
 
-The repository currently focuses on the **Phase 1 operational baseline: single-image remote-sensing VQA**. Broader capabilities such as grounding, bi-temporal change analysis, optical-SAR fusion, agentic orchestration, and GeoAI are represented as research/roadmap work rather than as the currently deployed backend feature set.
+SatQuery can route the request to the appropriate specialist model and
+return an answer together with a confidence estimate.
 
----
+For a bi-temporal query:
 
-##  Problem
+``` text
+T1 Image + T2 Image
 
-Traditional remote-sensing analysis often requires:
-
--  Specialized GIS and image-analysis workflows
--  Domain-specific technical knowledge
--  Multiple tools for different analytical tasks
--  Careful handling of geospatial raster data
--  Manual interpretation of satellite scenes
--  Reliable evaluation rather than unsupported AI answers
-
-Generic vision-language systems can describe an image, but remote-sensing imagery introduces additional challenges such as scale, spatial context, sensor-specific information, and scientific interpretation.
-
-**SatQuery AI aims to reduce the interaction barrier by allowing users to communicate with satellite imagery using natural language.**
-
----
-
-##  Solution
-
-SatQuery provides an interactive workflow:
-
-1.  Upload a supported satellite raster.
-2.  Enter a natural-language question.
-3.  Run the adapted remote-sensing VQA model.
-4.  Generate a concise answer.
-5.  Estimate confidence from multi-sample answer consistency.
-6.  Apply post-hoc confidence calibration.
-7.  Expose model/evaluation evidence through the application.
-
-The current backend accepts **GeoTIFF/TIFF inputs up to 50 MB** and exposes a dedicated `/api/vqa` endpoint.
-
----
-
-##  Current Capabilities
-
-| Capability | Status |
-|---|---|
-|  GeoTIFF/TIFF upload | ✅ Available |
-|  Drag & drop upload | ✅ Available |
-|  Natural-language VQA | ✅ Available |
-|  Multilingual query UI | ✅ UI-supported |
-|  InternVL3-1B backbone | ✅ Integrated |
-|  VQA-10K LoRA adapter | ✅ Integrated |
-|  Confidence estimation | ✅ Integrated |
-|  Confidence calibration | ✅ Integrated |
-|  Training/evaluation evidence | ✅ Integrated |
-|  Analysis report workflow | ✅ Implemented in UI |
-|  Spatial grounding | 🟡 Planned |
-|  Dense captioning | 🟡 Planned |
-|  Bi-temporal change analysis | 🟡 Planned |
-|  Optical + SAR fusion | 🟡 Experimental / Planned |
-|  Agentic orchestration | 🟡 Planned |
-|  GeoAI / OSM integration | 🟡 Planned |
-
-> **Important:** The repository's current backend explicitly exposes VQA as available, while the other capabilities are marked as `coming_soon` or planned in the frontend roadmap.
-
----
-
-#  Model Stack
-
-##  Vision-Language Backbone
-
-**OpenGVLab/InternVL3-1B**
-
-The deployed VQA service loads the InternVL3-1B base model and attaches the trained VQA LoRA adapter.
-
-### Configuration
-
-```text
-Base Model       : OpenGVLab/InternVL3-1B
-Adapter          : VQA-10K LoRA
-Visual Resolution: 448 × 448
-CUDA Precision   : bfloat16
-CPU Fallback     : float32
-Max New Tokens   : 32
+Question:
+"What changed between these two images?"
 ```
 
----
+For cross-modal analysis:
 
-##  Parameter-Efficient Adaptation
+``` text
+Optical Image + SAR Image
 
-Instead of modifying the complete base model, the repository uses **PEFT/LoRA**.
-
-Configured LoRA evidence includes:
-
-```text
-Target Modules : q_proj, k_proj, v_proj, o_proj
-Rank (r)       : 8
-Alpha          : 32
-Dropout        : 0.10
-Bias           : none
+Question:
+"What information does the SAR image reveal that complements the optical image?"
 ```
 
-This makes the adaptation substantially lighter than full-model fine-tuning.
+The long-term goal is to make remote-sensing intelligence accessible
+through a **single conversational interface**.
 
----
+------------------------------------------------------------------------
 
-##  Training Cohort
+# 🎯 Problem
 
-The repository documents a **10,000-sample remote-sensing VQA cohort**, including:
+Traditional satellite-image analysis often involves several separate
+steps:
 
-- 2,500 additional RSVQA samples
-- 2,500 additional VRSBench samples
-- Previous VQA-5K checkpoint continuation
-- Final combined cohort: **10,000 samples**
+1.  Identify the imagery type.
+2.  Understand the available spectral or SAR bands.
+3.  Preprocess the data.
+4.  Select a suitable model.
+5.  Formulate the task-specific input.
+6.  Run the appropriate model.
+7.  Interpret the prediction.
 
-Training evidence records an optimization loss of approximately **0.738394**.
+This creates a technical barrier for users who may understand the
+geographical problem but not the underlying remote-sensing processing
+pipeline.
 
----
+SatQuery addresses this by combining:
 
-#  System Architecture
+-   **Vision-Language Modeling**
+-   **Remote-Sensing Adaptation**
+-   **Task-Specialist Models**
+-   **Bi-Temporal Change Understanding**
+-   **Optical--SAR Fusion**
+-   **Agentic Routing**
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│                      USER INTERFACE                   │
-│                                                          │
-│   Image Upload  +   Natural-Language Question        │
-└──────────────────────────┬───────────────────────────────┘
-                           │
-                           ▼
-┌──────────────────────────────────────────────────────────┐
-│                  NODE.JS FRONTEND SERVER                │
-│                                                          │
-│  Static Assets • SPA Routing • API Proxy • Port 3000     │
-└──────────────────────────┬───────────────────────────────┘
-                           │
-                           ▼
-┌──────────────────────────────────────────────────────────┐
-│                     FASTAPI BACKEND                     │
-│                         Port 8000                         │
-│                                                          │
-│  Validation • Upload Handling • VQA API • Health API     │
-└──────────────────────────┬───────────────────────────────┘
-                           │
-                           ▼
-┌──────────────────────────────────────────────────────────┐
-│                      VQA SERVICE                       │
-│                                                          │
-│  InternVL3-1B → VQA-10K LoRA → Answer Generation         │
-└──────────────────────────┬───────────────────────────────┘
-                           │
-                           ▼
-┌──────────────────────────────────────────────────────────┐
-│               CONFIDENCE & CALIBRATION                 │
-│                                                          │
-│  Multi-sample consistency → Logistic calibration         │
-└──────────────────────────┬───────────────────────────────┘
-                           │
-                           ▼
-┌──────────────────────────────────────────────────────────┐
-│                      RESULT                            │
-│                                                          │
-│  Answer • Confidence • Confidence Tier • Metadata        │
-└──────────────────────────────────────────────────────────┘
+into a unified system.
+
+------------------------------------------------------------------------
+
+# 💡 Solution
+
+``` text
+                         ┌─────────────────────┐
+                         │       User          │
+                         │ Image + Question    │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │   Input Analyzer    │
+                         │ modality / temporal │
+                         │     configuration   │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │   Agent / Router    │
+                         │ Selects capability  │
+                         └──────────┬──────────┘
+                                    │
+              ┌─────────────────────┼─────────────────────┐
+              │                     │                     │
+              ▼                     ▼                     ▼
+        Single Image          Bi-Temporal            Optical + SAR
+        Specialist             Specialist             Specialist
+              │                     │                     │
+              └─────────────────────┼─────────────────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │ Answer + Confidence │
+                         └─────────────────────┘
 ```
 
----
+The architecture is modular so specialist capabilities can be developed
+and evaluated independently and then connected through the agentic
+layer.
 
-#  Inference Workflow
+------------------------------------------------------------------------
 
-### 01 —  Upload
+# 🚀 Key Capabilities
 
-The frontend accepts:
+## 1. Single-Image VQA
 
-- `.tif`
-- `.tiff`
-- `.geotiff`
-
-with a **50 MB maximum upload size**.
-
-### 02 —  Validation
-
-The backend validates:
-
-- Empty question
-- File extension
-- File size
-- Temporary file creation
-- Model response validity
-
-### 03 —  Preprocessing
-
-The current VQA service:
-
-- Converts the image to RGB
-- Resizes it to `448 × 448`
-- Applies bicubic interpolation
-- Converts it to a tensor
-- Normalizes using ImageNet-style mean/std
-- Moves it to CUDA when available
-
-### 04 —  Inference
-
-The image and question are passed to InternVL3-1B with the trained VQA-10K LoRA adapter.
-
-### 05 —  Multi-Sample Consistency
-
-The service generates:
-
-```text
-1 × deterministic answer
-+
-4 × sampled answers
-=
-5 total candidates
-```
-
-The answers are normalized and compared.
-
-### 06 —  Confidence
-
-The system calculates a consistency score based on the majority answer.
-
-### 07 —  Calibration
-
-If the calibration artifact exists, the consistency score is transformed using the stored logistic calibration parameters.
-
-### 08 —  API Response
-
-The final response includes:
-
-```json
-{
-  "success": true,
-  "feature": "vqa",
-  "question": "...",
-  "answer": "...",
-  "confidence": 0.85,
-  "confidence_percent": 85.0,
-  "confidence_label": "High",
-  "samples_used": 5,
-  "image_metadata": {
-    "filename": "...",
-    "size_mb": 12.4,
-    "width": 1024,
-    "height": 1024
-  }
-}
-```
-
----
-
-#  Confidence & Calibration
-
-SatQuery does **not simply display an arbitrary confidence number**.
-
-The current implementation follows:
-
-```text
-          5 Generated Answers
-                  │
-                  ▼
-         Answer Normalization
-                  │
-                  ▼
-       Majority-Answer Analysis
-                  │
-                  ▼
-       Consistency Score ∈ [0, 1]
-                  │
-                  ▼
-       Logistic Calibration Model
-                  │
-                  ▼
-        Calibrated Probability
-                  │
-          ┌───────┼────────┐
-          ▼       ▼        ▼
-        🔴 Low  🟡 Medium  🟢 High
-```
-
-### Confidence tiers
-
-```text
-🟢 High   : confidence >= 0.80
-🟡 Medium : confidence >= 0.60
-🔴 Low    : confidence < 0.60
-```
-
-### Calibration
-
-The repository uses **post-hoc logistic / Platt-style scaling** over validation evidence.
-
-Reported calibration metric:
-
-```text
-Expected Calibration Error (ECE): 0.0336
-```
-
-A calibration artifact is loaded from:
-
-```text
-Backend/calibration/confidence_calibrator.json
-```
-
-If that artifact is unavailable or invalid, the implementation falls back to the raw consistency score.
-
----
-
-# 📈 Evaluation Evidence
-
-The repository documents a 1,000-sample validation cohort.
-
-| Evaluation Suite | Samples | Correct | Accuracy |
-|---|---:|---:|---:|
-|  RSVQA | 500 | 339 | **67.80%** |
-|  VRSBench | 500 | 277 | **55.40%** |
-|  Overall | 1,000 | 616 | **61.60%** |
-
-### Training Evidence
-
-```text
- Average / reported training loss : 0.7384
- LoRA changed tensors             : 192
- LoRA unchanged tensors           : 0
- Overall validation accuracy      : 61.60%
- ECE                              : 0.0336
-```
-
-> These figures are repository-documented evidence and should be treated as benchmark/reporting results for the current VQA baseline, not as a universal claim of accuracy on every satellite-image distribution.
-
----
-
-#  Remote-Sensing Research
-
-The repository also documents experimental work beyond the current VQA deployment.
-
-##  Optical + SAR
-
-The research documentation describes:
-
-- Sentinel-1 C-band VV/VH SAR
-- Sentinel-2 multispectral imagery
-- Speckle-noise considerations
-- Spatial co-registration/parallax challenges
-- Cross-attention projection experiments
-
-### Status
-
-```text
-🧪 Experimental / Research Prototype
-🚧 Not the current deployed VQA baseline
-```
-
-This distinction is intentionally preserved in the project architecture and roadmap.
-
----
-
-# 🖥️ Frontend
-
-The frontend is a lightweight custom web application rather than a large framework-based SPA.
-
-### Core technologies
-
-```text
-HTML5
-CSS3
-Vanilla JavaScript / ES Modules
-Node.js HTTP Server
-```
-
-### UI capabilities
-
--  Earth-observation themed interface
--  Drag-and-drop image upload
--  Image preview
--  Natural-language query box
--  Ctrl/Cmd + Enter shortcut
--  Result hierarchy
--  Confidence visualization
--  Evidence-oriented pages
--  Documentation and roadmap views
--  Team / project pages
--  Analysis reporting workflow
-
-### Frontend routes
-
-```text
-/
-├── /analysis
-├── /documentation
-├── /team
-├── /roadmap
-└── /evidence
-```
-
-The application uses a client-side page router and serves the SPA through `frontend/server.js`.
-
----
-
-# ⚙️ Backend & API
-
-The backend is implemented using:
-
--  Python 3.11
--  FastAPI
--  Uvicorn
--  PyTorch
--  Transformers
--  PEFT
--  Pillow
--  Rasterio
--  NumPy / SciPy
--  scikit-learn
-
-### Backend responsibilities
-
-```text
- Receive Upload
-      ↓
- Validate Request
-      ↓
- Temporary Storage
-      ↓
- Image Preprocessing
-      ↓
- VQA Inference
-      ↓
- Confidence
-      ↓
- Calibration
-      ↓
- JSON Response
-      ↓
- Temporary Cleanup
-```
-
----
-
-#  API Reference
-
-## `GET /`
-
-Returns basic project/service information.
+SatQuery processes a single remote-sensing image and answers
+natural-language questions.
 
 Example:
 
-```json
-{
-  "project": "SatQuery AI",
-  "status": "running",
-  "version": "1.2.0",
-  "features": ["VQA"]
-}
+``` text
+Question: "Is there a water area?"
+Answer:   "Yes."
+Confidence: 0.xx
 ```
 
----
+The primary single-image VQA development uses **RSVQA**.
 
-## `GET /health`
+## 2. Scene Description / Captioning
 
-Health check.
+The system is designed to support natural-language descriptions of
+remote-sensing scenes.
 
 Example:
 
-```json
+``` text
+"The image contains agricultural fields,
+scattered buildings, and surrounding vegetation."
+```
+
+## 3. Bi-Temporal Change Understanding
+
+SatQuery supports analysis of two images acquired at different times.
+
+``` text
+T1 Image ─────┐
+              ├──► Change Understanding ──► Change VQA / Description
+T2 Image ─────┘
+```
+
+The current preparation path uses **CDVQA** for change-oriented visual
+question answering.
+
+## 4. Optical--SAR Joint Analysis
+
+Optical and SAR sensors provide complementary information.
+
+``` text
+Optical / Multispectral Image
+              +
+          SAR Image
+              ↓
+       Cross-Modal Model
+              ↓
+     Joint Interpretation
+```
+
+## 5. Agentic Model Selection
+
+The system is designed to identify the required task configuration
+rather than sending every request through one model.
+
+  Input                                   Intended Specialist
+  --------------------------------------- --------------------------
+  One optical image + question            Single-image VQA
+  One image + scene description request   Captioning / description
+  Two temporal images + question          Change specialist
+  Optical + SAR + question                Fusion specialist
+  Complex request                         Agentic sequence
+
+------------------------------------------------------------------------
+
+# 🧠 Model Architecture
+
+The current remote-sensing base combines three visual streams with a
+language model.
+
+``` text
+RGB Image
+    │
+    ▼
+InternVL3-1B Vision
+    │
+   MLP1
+    │
+RGB Tokens [256 × 896]
+    │
+    ├──────────────────────────────┐
+    │                              │
+S1 → reBEN S1 → S1 Adapter         │
+                  │                │
+             S1 Tokens             │
+            [256 × 896]             │
+                                   │
+S2 → reBEN S2 → S2 Adapter         │
+                  │                │
+             S2 Tokens             │
+            [256 × 896]             │
+    │                              │
+    └──────────────┬───────────────┘
+                   ▼
+             768 Visual Tokens
+                   │
+                   ▼
+          Qwen2 Language Model
+                   │
+                  LoRA
+                   │
+                   ▼
+               Text Output
+```
+
+Actual concatenation order during RS-base training:
+
+``` text
+RGB + S1 + S2
+```
+
+Token layout:
+
+``` text
+RGB = 256 tokens
+S1  = 256 tokens
+S2  = 256 tokens
+
+Total = 768 visual tokens
+```
+
+------------------------------------------------------------------------
+
+# 🛰️ Remote-Sensing Adaptation
+
+## Base VLM
+
+``` text
+OpenGVLab/InternVL3-1B
+```
+
+The native RGB branch was explicitly restored and retained so the
+RS-adapted checkpoint can support downstream RGB/single-image tasks.
+
+## Sentinel-1
+
+Pretrained encoder:
+
+``` text
+BIFOLD-BigEarthNetv2-0/vit_base_patch8_224-s1-v0.1.1
+```
+
+Channels:
+
+``` text
+VV
+VH
+```
+
+## Sentinel-2
+
+Pretrained encoder:
+
+``` text
+BIFOLD-BigEarthNetv2-0/vit_base_patch8_224-s2-v0.2.0
+```
+
+Bands:
+
+``` text
+B02 B03 B04 B05 B06 B07 B08 B8A B11 B12
+```
+
+## Satellite Adapter
+
+``` text
+Input dimension  : 768
+Hidden dimension : 1024
+Output dimension : 896
+Tokens           : 256
+```
+
+Each adapter uses learned token queries, LayerNorm, normalized
+similarity attention, projection layers, and output normalization.
+
+------------------------------------------------------------------------
+
+# 🔧 Trainable vs Frozen Components
+
+### Trainable
+
+``` text
+S1 Adapter
+S2 Adapter
+Qwen2 LoRA
+```
+
+### Frozen
+
+``` text
+BigEarthNet S1 encoder
+BigEarthNet S2 encoder
+InternVL RGB vision encoder
+InternVL MLP
+Qwen2 base model
+```
+
+Approximate trainable parameter counts:
+
+``` text
+S1 Adapter : 1,905,792
+S2 Adapter : 1,905,792
+Qwen2 LoRA : 2,162,688
+--------------------------------
+Total       : 5,974,272
+```
+
+RS-base LoRA:
+
+``` text
+r       = 16
+alpha   = 32
+dropout = 0.05
+```
+
+Specialist LoRA:
+
+``` text
+r       = 8
+alpha   = 32
+dropout = 0.10
+```
+
+------------------------------------------------------------------------
+
+# 📚 Datasets
+
+## BigEarthNet-v2
+
+Used for the core remote-sensing adaptation.
+
+100K unique S1/S2 pairs were prepared and verified.
+
+Image roots:
+
+``` text
+F:\SatQuery\data\images@k\S1
+F:\SatQuery\data\images k\S1
+F:\SatQuery\data\imagesk\S1
+
+F:\SatQuery\data\images@k\S2
+F:\SatQuery\data\images k\S2
+F:\SatQuery\data\imagesk\S2
+```
+
+Verified:
+
+``` text
+S1 images      : 100,000
+S2 images      : 100,000
+Matching pairs : 100,000
+Missing        : 0
+```
+
+## RSVQA
+
+Location:
+
+``` text
+F:\SatQuery\data\RSVQA
+```
+
+Verified:
+
+``` text
+Usable VQA records : 57,223
+Unique images      : 572
+```
+
+Question categories:
+
+``` text
+comp
+count
+presence
+rural_urban
+```
+
+All usable records were verified to have answers and corresponding TIFF
+files.
+
+## CDVQA
+
+Official repository:
+
+``` text
+https://github.com/YZHJessica/CDVQA
+```
+
+Current preparation flow:
+
+``` text
+Repository / annotations
+        ↓
+JSON verification
+        ↓
+Actual image acquisition
+        ↓
+Image-ID matching
+        ↓
+Dataset construction
+        ↓
+Change-VQA training
+```
+
+Expected annotation files include:
+
+``` text
+Train_answers.json
+Train_images.json
+Train_questions.json
+
+Val_answers.json
+Val_images.json
+Val_questions.json
+
+Test_answers.json
+Test_images.json
+Test_questions.json
+```
+
+The repository/annotations and actual satellite images are treated as
+separate acquisition steps.
+
+------------------------------------------------------------------------
+
+# 🏋️ Training Journey
+
+## Stage 1 --- Original 100K S1/S2 RS Adaptation
+
+Checkpoint:
+
+``` text
+F:\SatQuery\checkpoints\satquery_100kinal  raining_state.pt
+```
+
+Configuration:
+
+``` text
+Data              : 100K
+Modalities        : S1 + S2
+Optimizer steps   : 12,500
+```
+
+This checkpoint is preserved and must not be overwritten.
+
+## Stage 2 --- 100K RGB + S1 + S2 RS Base
+
+A critical architectural issue was identified: the satellite branch had
+bypassed InternVL's native RGB vision branch.
+
+The pipeline was corrected before locking the RS base.
+
+Final checkpoint:
+
+``` text
+F:\SatQuery\checkpoints\satquery_100k_rgb_baseinal raining_state.pt
+```
+
+Result:
+
+``` text
+Full epoch        : completed
+Optimizer steps   : 12,500
+Average loss      : ~0.3057
+```
+
+A separate 250-step sanity checkpoint also exists:
+
+``` text
+F:\SatQuery\checkpoints\satquery_100k_rgb_sanity_250inal   raining_state.pt
+```
+
+This is a sanity checkpoint, not the final RS base.
+
+## Stage 3 --- RGB Compatibility Test
+
+Verified with the RS Base:
+
+``` text
+RGB tokens       : [1, 256, 896]
+Text embeddings  : [1, 24, 896]
+Combined         : [1, 280, 896]
+Logits           : [1, 280, 151674]
+Forward          : SUCCESS
+```
+
+This proves technical RGB compatibility. It does **not** prove high
+RGB-only VQA accuracy; specialist task adaptation remains necessary.
+
+## Stage 4 --- RSVQA Specialist Sanity Training
+
+A one-batch test verified:
+
+``` text
+RS Base loading       ✓
+LoRA merge            ✓
+New RSVQA LoRA        ✓
+Forward               ✓
+Loss                  ✓
+Backward              ✓
+Gradient update       ✓
+Checkpoint save       ✓
+Checkpoint reload     ✓
+```
+
+Sanity checkpoint:
+
+``` text
+F:\SatQuery\checkpoints\satquery_rsvqa_sanity   raining_state.pt
+```
+
+## Stage 5 --- Full RSVQA Training
+
+Training dataset:
+
+``` text
+57,223 records
+1 epoch
+```
+
+Unique RGB-token cache:
+
+``` text
+F:\SatQuery\cachesvqa_rgb_tokens.pt
+```
+
+Target checkpoint:
+
+``` text
+F:\SatQuery\checkpoints\satquery_rsvqainal raining_state.pt
+```
+
+## Stage 6 --- CDVQA
+
+CDVQA is the current next specialist pipeline.
+
+The first priority is correct data acquisition and verification before
+training.
+
+------------------------------------------------------------------------
+
+# 📊 Current Status
+
+  Component                      Status
+  ------------------------------ -------------------------
+  BigEarthNet RS adaptation      ✅ Complete
+  Original 100K S1/S2 base       ✅ Complete
+  100K RGB + S1 + S2 RS Base     ✅ Complete
+  RGB compatibility test         ✅ Passed
+  RSVQA dataset preparation      ✅ Complete
+  RSVQA sanity training          ✅ Passed
+  Full RSVQA training            🔄 Current/latest stage
+  CDVQA repository preparation   🔄 Current
+  CDVQA image preparation        ⏳ Next
+  CDVQA specialist               ⏳ Pending
+  Optical--SAR specialist        ⏳ Planned
+  Agentic router                 ⏳ Planned
+  Final integration              ⏳ Planned
+
+------------------------------------------------------------------------
+
+# 🗂️ Project Structure
+
+``` text
+F:\SatQuery
+│
+├── data
+│   ├── images
+│   │   ├── 5k
+│   │   │   ├── S1
+│   │   │   └── S2
+│   │   ├── 40k
+│   │   │   ├── S1
+│   │   │   └── S2
+│   │   └── 100k
+│   │       ├── S1
+│   │       └── S2
+│   │
+│   ├── RSVQA
+│   │   ├── images
+│   │   │   └── Images_LR
+│   │   └── splits
+│   │
+│   ├── CDVQA_repo
+│   └── satquery_100000_manifest.csv
+│
+├── cache
+│   └── rsvqa_rgb_tokens.pt
+│
+├── checkpoints
+│   ├── satquery_100k
+│   ├── satquery_100k_rgb_base
+│   ├── satquery_100k_rgb_sanity_250
+│   ├── satquery_rsvqa_sanity
+│   └── satquery_rsvqa
+│
+├── src
+│   ├── train_100k_rgb_base_full.py
+│   ├── train_rsvqa_rsbase.py
+│   └── ...
+│
+└── satquery_env
+```
+
+------------------------------------------------------------------------
+
+# 🧰 Technology Stack
+
+### AI / ML
+
+-   Python 3.11
+-   PyTorch
+-   Transformers
+-   PEFT / LoRA
+-   Accelerate
+-   timm
+-   Lightning
+
+### Remote Sensing
+
+-   BigEarthNet-v2
+-   Sentinel-1
+-   Sentinel-2
+-   Rasterio
+-   TIFF / GeoTIFF
+-   reBEN pretrained encoders
+
+### Vision-Language
+
+-   InternVL3-1B
+-   Qwen2
+-   LoRA / PEFT
+
+### Backend
+
+-   FastAPI
+-   Uvicorn
+
+### Frontend
+
+-   React
+-   TypeScript
+-   Vite
+-   Tailwind CSS
+
+### Infrastructure
+
+-   NVIDIA RTX A6000
+-   Local model/data storage
+-   Planned cloud GPU deployment using AWS EC2 where required
+
+------------------------------------------------------------------------
+
+# 🖼️ Data Processing
+
+The user-facing application is intended to hide low-level band
+management.
+
+The user should not have to manually provide:
+
+``` text
+VV.tif
+VH.tif
+B02.tif
+B03.tif
+B04.tif
+...
+```
+
+Internally:
+
+### Sentinel-1
+
+``` text
+VV + VH
+```
+
+### Sentinel-2
+
+``` text
+B02 B03 B04 B05 B06 B07 B08 B8A B11 B12
+```
+
+### RGB
+
+``` text
+R = B04
+G = B03
+B = B02
+```
+
+The current RGB adaptation path normalizes reflectance, clips to a valid
+range, resizes the image to the InternVL input size, and extracts RGB
+tokens.
+
+------------------------------------------------------------------------
+
+# 🎯 Confidence Scores
+
+Every specialist is intended to expose both a result and a confidence
+estimate.
+
+Example:
+
+``` json
 {
-  "status": "healthy",
-  "vqa_loaded": true
+  "answer": "Yes",
+  "confidence": 0.91,
+  "specialist": "VQA"
 }
 ```
 
----
+Change VQA:
 
-## `GET /api/features`
-
-Returns the currently exposed feature status.
-
-The repository currently reports:
-
-```text
-VQA                  → available
-Captioning           → coming_soon
-Grounding            → coming_soon
-Change VQA           → coming_soon
-Optical-SAR Fusion   → coming_soon
-```
-
----
-
-## `POST /api/vqa`
-
-### Input
-
-`multipart/form-data`
-
-```text
-image    → GeoTIFF/TIFF file
-question → text
-```
-
-### Constraints
-
-```text
-Maximum file size : 50 MB
-Supported formats: .tif, .tiff, .geotiff
-```
-
-### Output
-
-```json
+``` json
 {
-  "success": true,
-  "feature": "vqa",
-  "question": "What is visible in this image?",
-  "answer": "....",
-  "confidence": 0.85,
-  "confidence_percent": 85.0,
-  "confidence_label": "High",
-  "samples_used": 5,
-  "image_metadata": {
-    "filename": "scene.tif",
-    "size_mb": 8.4,
-    "width": 1024,
-    "height": 1024
-  }
+  "answer": "New construction is visible in the second image.",
+  "confidence": 0.84,
+  "specialist": "Change-VQA"
 }
 ```
 
----
+Confidence should eventually be calibrated and evaluated rather than
+treated as a guaranteed probability.
 
-#  Repository Structure
+------------------------------------------------------------------------
 
-```text
-SATQUERY-2.0/
-│
-├──  Backend/
-│   ├──  calibration/
-│   │   └── confidence_calibrator.json
-│   │
-│   ├──  checkpoints/
-│   │   └── vqa_10k/
-│   │
-│   ├──  main.py
-│   ├──  satquery_requirements_exact.txt
-│   │
-│   └──  services/
-│       └── vqa_service.py
-│
-├──  frontend/
-│   ├──  package.json
-│   ├──  server.js
-│   │
-│   └── public/
-│       ├──  index.html
-│       ├── assets/
-│       ├── js/
-│       │   ├── app.js
-│       │   └── pages/
-│       │       ├── home.js
-│       │       ├── analysis.js
-│       │       ├── documentation.js
-│       │       ├── evidence.js
-│       │       ├── roadmap.js
-│       │       └── team.js
-│       │
-│       └── styles/
-│           └── satquery.css
-│
-├──  hero-earth.jpg
-├──  README.md
-└──  .gitignore
+# 🤖 Agentic Orchestration
+
+``` text
+                    User Query
+                         │
+                         ▼
+                  Input Analyzer
+                         │
+                         ▼
+                   Agent Router
+                         │
+          ┌──────────────┼──────────────┐
+          ▼              ▼              ▼
+         VQA         Change-VQA       Fusion
+          │              │              │
+          └──────────────┼──────────────┘
+                         ▼
+                   Final Response
 ```
 
----
+The agentic layer is responsible for determining which specialist or
+sequence of tools/models should be used.
 
-#  Hardware & Software Requirements
+------------------------------------------------------------------------
 
-The repository's exact GPU environment targets:
+# 🖥️ Application Flow
 
-```text
-Operating System : Windows Server 2016
-Python           : 3.11.x
-GPU              : NVIDIA RTX A6000
-CUDA Runtime     : 12.1
-PyTorch          : 2.5.1
+``` text
+Open SatQuery
+     ↓
+Upload image(s)
+     ↓
+Enter natural-language question
+     ↓
+Analyze input configuration
+     ↓
+Select specialist
+     ↓
+Preprocess imagery
+     ↓
+Run inference
+     ↓
+Generate answer + confidence
+     ↓
+Display result
 ```
 
-### Important environment notes
+The planned application is intended to provide a feature-rich user
+experience rather than a minimal upload-and-answer interface.
 
-The repository intentionally does **not** include:
+------------------------------------------------------------------------
 
-```text
- flash-attn
- bitsandbytes
+# 📈 Evaluation Plan
+
+## Single-Image VQA
+
+Dataset:
+
+``` text
+RSVQA
 ```
 
-The documented reason is Windows compatibility / controlled introduction of quantization tooling.
+Evaluate:
 
----
+-   answer correctness,
+-   question-type performance,
+-   inference stability,
+-   confidence behavior.
 
-#  Installation
+## Change VQA
 
-## 1️ Clone the repository
+Dataset:
 
-```bash
-git clone <YOUR_REPOSITORY_URL>
-cd SATQUERY-2.0
+``` text
+CDVQA
 ```
 
-## 2️ Create the Python environment
+Evaluate:
 
-### Windows
+-   change-question answering,
+-   temporal reasoning,
+-   answer correctness,
+-   confidence behavior.
 
-```powershell
-py -3.11 -m venv satquery_env
-.\satquery_env\Scripts\activate
+## Remote-Sensing Adaptation
+
+Evaluate whether the adapted representation provides useful downstream
+remote-sensing behavior compared with the starting model.
+
+## Optical--SAR Fusion
+
+Evaluate whether the joint model can exploit complementary information
+from optical and SAR imagery.
+
+------------------------------------------------------------------------
+
+# 🛣️ Development Roadmap
+
+``` text
+BigEarthNet Adaptation
+          │
+          ▼
+     RS Base v1
+   RGB + S1 + S2
+          │
+    ┌─────┼─────┐
+    ▼     ▼     ▼
+  RSVQA  CDVQA  Captioning
+    │     │     │
+    └─────┼─────┘
+          ▼
+   Specialist Layer
+          │
+          ▼
+ Optical–SAR Fusion
+          │
+          ▼
+   Agentic Router
+          │
+          ▼
+     SatQuery App
+          │
+          ▼
+   Cloud Deployment
 ```
 
-### Upgrade pip
+Immediate priority:
 
-```bash
-python -m pip install --upgrade pip
+``` text
+Finish RSVQA
+      ↓
+Prepare CDVQA data
+      ↓
+Train CDVQA specialist
+      ↓
+Build change inference
+      ↓
+Optical–SAR fusion
+      ↓
+Agentic orchestration
+      ↓
+Final UI/backend integration
+      ↓
+Deployment + demonstration
 ```
 
-## 3️ Install backend dependencies
+------------------------------------------------------------------------
 
-```bash
-pip install -r Backend/satquery_requirements_exact.txt
-```
+# ⚠️ Limitations and Prototype Scope
 
-> The requirements file pins the PyTorch CUDA 12.1 stack and the major ML/API dependencies used by the repository.
+SatQuery is a **research/prototype system**, not a production-scale
+global satellite intelligence platform.
 
----
+Current limitations include:
 
-#  Running the Application
+1.  Specialist performance depends on available training data.
+2.  Technical compatibility does not automatically imply high task
+    accuracy.
+3.  The RS Base uses a specific multimodal token configuration.
+4.  RGB-only compatibility has been technically verified, but useful
+    RGB-only VQA requires task adaptation.
+5.  CDVQA preparation and specialist training are still in progress.
+6.  Optical--SAR fusion is a separate capability and is not
+    interchangeable with bi-temporal change analysis.
+7.  Confidence values require calibration and evaluation.
+8.  The prototype is being developed under limited time and compute
+    constraints.
 
-##  Start Backend
+------------------------------------------------------------------------
 
-```bash
-cd Backend
-python main.py
-```
+# 🔐 Checkpoint Management
 
-Backend:
+Important checkpoints are intentionally kept separate.
 
-```text
-http://localhost:8000
-```
-
-Health:
-
-```text
-http://localhost:8000/health
-```
-
----
-
-##  Start Frontend
-
-Open another terminal:
-
-```bash
-cd frontend
-npm start
-```
-
-Frontend:
-
-```text
-http://localhost:3000
-```
-
-The Node server proxies `/api/*` and `/health` requests to the FastAPI backend on port `8000`.
-
----
-
-#  Runtime Architecture
-
-```text
-Browser
-  │
-  │ HTTP :3000
-  ▼
-┌──────────────────────┐
-│  Node.js Server    │
-│ Static + SPA + Proxy │
-└──────────┬───────────┘
-           │
-           │ /api/*
-           ▼
-┌──────────────────────┐
-│  FastAPI :8000      │
-│ Validation + VQA API │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│  VQAService        │
-│ InternVL3-1B + LoRA  │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│  Calibration       │
-│ Consistency → Score  │
-└──────────┬───────────┘
-           │
-           ▼
-       JSON Result
-```
-
----
-
-#  Validation & Evidence
-
-SatQuery includes an explicit evidence-oriented design rather than presenting the model as an unexplained black box.
-
-The UI documents:
-
-###  Model Evidence
-
-- Base model
-- LoRA configuration
-- Training cohort
-- Training loss
-- Checkpoint information
-
-###  Evaluation Evidence
-
-- RSVQA validation
-- VRSBench validation
-- Overall validation cohort
-
-###  Calibration Evidence
-
-- Multi-sample consistency
-- Logistic calibration
-- ECE measurement
-- Confidence tiers
-
-###  Inference Evidence
-
-- Query
-- Answer
-- Confidence
-- Number of samples
-- Image metadata
-- Execution/inference information exposed by the application
-
----
-
-#  Roadmap
-
-The repository defines a staged expansion strategy.
-
-```text
-✅ Phase 1
-Single-Image Remote-Sensing VQA
-│
-├── GeoTIFF/TIFF
-├── InternVL3-1B
-├── VQA-10K LoRA
-├── Confidence calibration
-└── Evidence/reporting
+``` text
+satquery_100k
+        │
+        ├── Original 100K RS checkpoint
         │
         ▼
-🟡 Phase 2
-Captioning + Spatial Grounding
+satquery_100k_rgb_base
+        │
+        ├── Current RS Base v1
+        │
+        ├── satquery_100k_rgb_sanity_250
         │
         ▼
-🟡 Phase 3
-Bi-Temporal Change Analysis
+satquery_rsvqa
         │
-        ▼
-🟡 Phase 4
-Optical + SAR Fusion
-        │
-        ▼
-🟡 Phase 5
-Agentic Orchestration
-        │
-        ▼
-🟡 Phase 6
-Geospatial Intelligence / GeoAI
-        │
-        ▼
-🌍 Phase 7
-Complete SatQuery Ecosystem
+        └── RSVQA specialist
 ```
 
-### Phase 2 —  Grounding + Captioning
+Original checkpoints should never be overwritten during specialist
+development.
 
-Spatial localization and dense scene interpretation.
+------------------------------------------------------------------------
 
-### Phase 3 —  Bi-Temporal Analysis
+# 💻 Environment
 
-Compare T1/T2 imagery for changes such as:
-
-- Urban expansion
-- Flood damage
-- Deforestation
-- Other temporal scene changes
-
-### Phase 4 —  Optical + SAR
-
-Combine optical multispectral information with radar observations.
-
-### Phase 5 —  Agentic Orchestration
-
-Connect VQA models, GIS tools such as GDAL/Rasterio, and external geospatial data sources.
-
-### Phase 6 —  GeoAI
-
-Introduce:
-
-- Coordinate-aware outputs
-- Bounding polygons
-- Geocoding
-- OpenStreetMap integration
-
-### Phase 7 —  Full Ecosystem
-
-Long-term vision for a conversational Earth-observation intelligence platform for:
-
-- Enterprise geospatial analysts
-- NGOs
-- Civil-defense organizations
-- Large-scale EO workflows
-
----
-
-#  Current Scope & Limitations
-
-SatQuery 2.0 should currently be understood as a **VQA-first system**.
-
-### Current limitations
-
--  Current backend exposes VQA as the production/available capability.
--  Grounding is not yet exposed as a backend endpoint.
--  Bi-temporal change detection is planned.
--  Optical-SAR fusion is experimental/planned.
--  Full agentic model routing is planned.
--  Full geospatial intelligence integration is planned.
--  Benchmark performance can vary substantially across datasets and sensor distributions.
--  VQA should not be treated as an exact object-counting or measurement engine without a dedicated specialist model.
--  The current development CORS configuration is permissive and should be hardened before production deployment.
-
----
-
-#  Security Notes
-
-Before production deployment, consider:
-
--  Authentication and authorization
--  Restricting CORS origins
--  Upload MIME/content validation
--  Strict temporary-file lifecycle management
--  Server-side payload limits
--  Rate limiting
--  Structured request logging
--  Avoiding sensitive data in logs
--  HTTPS/TLS
--  Dependency vulnerability scanning
--  Production-grade process management
-
-The current repository is best treated as an **engineering prototype / research deployment baseline**, not a hardened public production service.
-
----
-
-#  Design Philosophy
-
-SatQuery follows four principles:
-
-### 1.  Natural Language First
-
-Users interact with satellite imagery through questions rather than complex command pipelines.
-
-### 2.  Parameter-Efficient Adaptation
-
-LoRA/PEFT adapts a pretrained VLM instead of requiring full-model retraining.
-
-### 3.  Confidence-Aware Answers
-
-The system exposes calibrated confidence rather than presenting every prediction with equal certainty.
-
-### 4. 🔬 Evidence-Oriented Engineering
-
-Training, evaluation, calibration, and inference information are surfaced as first-class project artifacts.
-
----
-
-#  Why SatQuery?
-
-```text
-Traditional EO Workflow
-────────────────────────────────────────────
-Satellite Data
-     ↓
-GIS Software
-     ↓
-Manual Preprocessing
-     ↓
-Specialized Model
-     ↓
-Expert Interpretation
-     ↓
-Final Insight
-
-SatQuery
-────────────────────────────────────────────
-Satellite Image
-     ↓
-Natural-Language Question
-     ↓
-Vision-Language Model
-     ↓
-Confidence + Evidence
-     ↓
-Actionable Insight
+``` text
+OS             : Windows Server 2016
+Python         : 3.11
+Environment    : satquery_env
+Project root   : F:\SatQuery
+GPU            : NVIDIA RTX A6000
 ```
 
-The long-term goal is not to replace remote-sensing experts.
+The development environment also includes the reBEN training scripts and
+required dependencies such as:
 
-> **The goal is to reduce the technical overhead required to extract useful information from Earth-observation imagery.**
-
----
-
-#  Contributing
-
-Contributions are welcome.
-
-Suggested workflow:
-
-```bash
-git checkout -b feature/your-feature
+``` text
+lmdb
+lightning.pytorch
+configilm
 ```
 
-Make your changes, validate locally, then open a pull request with:
+------------------------------------------------------------------------
 
--  Problem statement
--  Proposed change
--  Validation performed
--  Relevant metrics
--  UI screenshots when applicable
--  Known limitations
+# 👥 Team
 
----
+## VisionX
 
-#  License
+-   **Afsar Azam**
+-   **Ayush Singh**
+-   **Lalita Jhapate**
+-   **Abhi Jain**
+-   **Shivam Kumar**
+-   **Abhinav Saini**
 
-This repository currently declares the **ISC License** in `frontend/package.json`.
+------------------------------------------------------------------------
 
-For any redistribution or deployment, review the repository's licensing files and the licenses of all third-party models, datasets, and dependencies used by your deployment.
+# 📚 References
 
----
+### InternVL
 
-#  Team : vision x
+https://github.com/OpenGVLab/InternVL
 
-###  SatQuery 
+### BigEarthNet
 
-Building an intelligent interface for Earth Observation and remote-sensing analysis.
+https://bigearth.net/
 
-> **Ask the Earth. Get Answers.** 
+### BigEarthNet-v2 pretrained models
 
----
+https://huggingface.co/BIFOLD-BigEarthNetv2-0
 
-##  Project Snapshot
+### CDVQA
 
-| Layer | Technology |
-|---|---|
-|  Frontend | HTML5 + CSS3 + JavaScript |
-|  Frontend Server | Node.js |
-|  Backend API | FastAPI |
-|  VLM | InternVL3-1B |
-|  Adaptation | VQA-10K LoRA / PEFT |
-|  ML Runtime | PyTorch |
-|  Image Processing | Pillow / tifffile |
-|  EO Raster Support | Rasterio |
-|  Evaluation | RSVQA + VRSBench |
-|  Calibration | Logistic / Platt-style scaling |
-|  Reporting | Analysis/evidence workflow |
-|  Future | Grounding + Change + SAR + Agentic GeoAI |
+https://github.com/YZHJessica/CDVQA
 
----
+### Hugging Face PEFT
 
-##  Final Architecture Vision
+https://github.com/huggingface/peft
 
-```text
-                          SATQUERY AI
-                              │
-                    Natural-Language Query
-                              │
-                              ▼
-                     Intelligent Agent
-                              │
-             ┌────────────────┼────────────────┐
-             ▼                ▼                ▼
-           VQA          Grounding          Change
-             │                │                │
-             └────────────────┼────────────────┘
-                              │
-                          SAR + Optical
-                              │
-                              ▼
-                     Result Coordination
-                              │
-                     Confidence + Evidence
-                              │
-                              ▼
-                      Verified Insight
+### Transformers
+
+https://github.com/huggingface/transformers
+
+### PyTorch
+
+https://pytorch.org/
+
+------------------------------------------------------------------------
+
+# 🌌 Project Vision
+
+> **SatQuery AI aims to turn complex remote-sensing analysis into a
+> natural-language interaction.**
+
+Instead of requiring users to understand sensors, bands, preprocessing
+pipelines, and specialized model selection, SatQuery is being built
+around a simple interaction:
+
+``` text
+Upload imagery.
+      ↓
+Ask a question.
+      ↓
+SatQuery understands the task.
+      ↓
+The appropriate specialist is selected.
+      ↓
+The imagery is analyzed.
+      ↓
+The answer + confidence are returned.
 ```
 
-> **From satellite pixels to understandable intelligence. **
+SatQuery brings together:
+
+**Remote-Sensing Representation Learning + Vision-Language Modeling +
+Task Specialists + Temporal Reasoning + Multimodal Fusion + Agentic
+Orchestration**
+
+into one unified prototype.
+
+------------------------------------------------------------------------
+
+## ⭐ SatQuery AI
+
+**See the Earth. Understand the Question. Query the Satellite.**
