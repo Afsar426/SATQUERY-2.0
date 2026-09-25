@@ -1,6 +1,10 @@
 # 🛰️ SatQuery AI
 
-> **An Agentic Vision-Language Assistant for Remote-Sensing Imagery**
+<p align="center">
+  <img src="assets/satquery-typing-animation.gif"
+       alt="SatQuery AI tagline"
+       width="90%">
+</p>
 
 <p align="center">
   <img src="assets/satquery-ui.jpeg" alt="SatQuery AI Interface" width="95%">
